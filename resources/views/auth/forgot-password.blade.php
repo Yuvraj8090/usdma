@@ -1,4 +1,7 @@
 <x-guest-layout>
+     @livewireScripts
+    @vite(['resources/css/app.css', 'resources/js/app.js'])
+    @livewireStyles
     <x-authentication-card>
         <x-slot name="logo">
             <x-authentication-card-logo />

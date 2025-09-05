@@ -33,7 +33,7 @@ Route::get('/admin', function () {
     return redirect()->route('login'); // Adjust this route name as needed
 });
 Route::middleware(['auth:sanctum', config('jetstream.auth_session'), 'verified'])->group(function () {
-    Route::post('/admin/clear-cache', [PageController::class, 'clearCache'])->name('admin.clear.cache');
+       Route::post('/admin/clear-cache', [PageController::class, 'clearCache'])->name('admin.clear.cache');
 
     // Dashboard route
     Route::get('/admin/dashboard', [AnalyticsController::class, 'index'])->name('dashboard');
@@ -82,8 +82,3 @@ Route::middleware(['auth:sanctum', config('jetstream.auth_session'), 'verified']
         });
 });
 
-Route::middleware(['auth:sanctum', config('jetstream.auth_session'), 'verified'])->group(function () {
-    Route::get('/dashboard', function () {
-        return view('dashboard');
-    })->name('dashboard');
-});
