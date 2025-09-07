@@ -13,7 +13,7 @@
             </button>
             <div id="navMenu" class=" navbar-collapse justify-content-end">
                 <ul class="navbar-nav align-items-center">
-                    <li class="nav-item"><a class="nav-link" href="#">Home</a></li>
+                    <li class="nav-item"><a class="nav-link" href="{{ route('welcome') }}">Home</a></li>
                     <li class="nav-item ms-3"><button class="btn btn-danger btn-md"><a class="nav-link" href="{{ route('login') }}">SIGN IN</a></button></li>
                 </ul>
             </div>

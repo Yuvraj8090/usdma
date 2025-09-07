@@ -6,8 +6,9 @@ use App\Http\Controllers\UserController;
 use App\Http\Controllers\Admin\StateController;
 use App\Http\Controllers\Admin\AccidentalReportController;
  use App\Http\Controllers\Admin\DistrictUserController;
-
+use App\Http\Controllers\Admin\DailyReportDhamController;
 use App\Http\Controllers\Admin\DailyReportsFillableController;
+use App\Http\Controllers\Admin\DailyReportFileController;
 use App\Http\Controllers\Admin\DailyReportController;
 use App\Http\Controllers\Admin\DistrictController;
 use App\Http\Controllers\Admin\DistrictReportController;
@@ -34,23 +35,34 @@ Route::get('/admin', function () {
 });
 Route::middleware(['auth:sanctum', config('jetstream.auth_session'), 'verified'])->group(function () {
        Route::post('/admin/clear-cache', [PageController::class, 'clearCache'])->name('admin.clear.cache');
+Route::get('admin/daily-reports-dhams/pdf', [DailyReportDhamController::class, 'downloadPdf'])
+    ->name('admin.daily_reports_dhams.pdf');
 
     // Dashboard route
     Route::get('/admin/dashboard', [AnalyticsController::class, 'index'])->name('dashboard');
+
+Route::prefix('admin')->group(function () {
+    Route::get('/reports', [DailyReportFileController::class, 'index'])->name('admin.reports.index');
+    Route::post('/reports', [DailyReportFileController::class, 'store'])->name('admin.reports.store');
+});
 
     // Admin routes group
     Route::prefix('admin')
         ->name('admin.')
         ->group(function () {
-           
-    Route::resource('district-users', DistrictUserController::class);
+            
+            Route::resource('district-users', DistrictUserController::class);
+            
 
-
-            Route::resource('district-reports', DistrictReportController::class);
+ 
+    // Daily Reports for Dhams
+        Route::resource('district-reports', DistrictReportController::class);
 
             Route::resource('daily_reports_fillable', DailyReportsFillableController::class);
             Route::resource('daily_reports', DailyReportController::class);
-
+            Route::resource('daily_reports_dhams', DailyReportDhamController::class);
+            Route::delete('daily_reports_dhams/{daily_reports_dham}/force', [DailyReportDhamController::class, 'forceDestroy'])
+    ->name('daily_reports_dhams.forceDestroy');
             Route::resource('districts', DistrictController::class);
 
             Route::resource('accidental_reports', AccidentalReportController::class);

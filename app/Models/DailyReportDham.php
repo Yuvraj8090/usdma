@@ -6,31 +6,25 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
-class DailyReport extends Model
+class DailyReportDham extends Model
 {
     use HasFactory, SoftDeletes;
 
-    protected $table = 'daily_reports';
+    protected $table = 'daily_reports_dhams';
 
-    // Add 'from_date' to fillable
     protected $fillable = [
-        'district_id',
-        'fillable_id',
-        'count',
-        'report_date',
-        'from_date',
+        'dham_id', 'fillable_id', 'count', 'report_date', 
     ];
 
-    // Add 'from_date' to casts
     protected $casts = [
         'report_date' => 'date',
-        'from_date'   => 'date',
+        
+        'count'       => 'integer',
     ];
 
-    // Relationships
-    public function district()
+    public function dham()
     {
-        return $this->belongsTo(District::class);
+        return $this->belongsTo(Dham::class, 'dham_id');
     }
 
     public function fillableCategory()

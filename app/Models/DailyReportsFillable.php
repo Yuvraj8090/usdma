@@ -12,13 +12,8 @@ class DailyReportsFillable extends Model
 
     protected $table = 'daily_reports_fillable';
 
-    protected $fillable = [
-        'parent_id',
-        'name',
-        'is_active',
-    ];
+    protected $fillable = ['parent_id', 'name', 'is_active'];
 
-    // Self-referencing relationship
     public function parent()
     {
         return $this->belongsTo(DailyReportsFillable::class, 'parent_id');

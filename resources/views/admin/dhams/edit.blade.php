@@ -22,6 +22,44 @@
                     @enderror
                 </div>
 
+                {{-- State --}}
+                <div class="mb-4">
+                    <label class="block text-sm font-medium text-gray-700 dark:text-gray-300">State</label>
+                    <select name="state_id" 
+                            class="mt-1 block w-full rounded-lg border-gray-300 dark:border-gray-600 
+                                   dark:bg-gray-900 dark:text-white shadow-sm focus:ring-indigo-500 focus:border-indigo-500">
+                        <option value="">-- Select State --</option>
+                        @foreach($states as $state)
+                            <option value="{{ $state->id }}" 
+                                {{ old('state_id', $dham->state_id) == $state->id ? 'selected' : '' }}>
+                                {{ $state->name }}
+                            </option>
+                        @endforeach
+                    </select>
+                    @error('state_id')
+                        <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
+                    @enderror
+                </div>
+
+                {{-- District --}}
+                <div class="mb-4">
+                    <label class="block text-sm font-medium text-gray-700 dark:text-gray-300">District</label>
+                    <select name="district_id" 
+                            class="mt-1 block w-full rounded-lg border-gray-300 dark:border-gray-600 
+                                   dark:bg-gray-900 dark:text-white shadow-sm focus:ring-indigo-500 focus:border-indigo-500">
+                        <option value="">-- Select District --</option>
+                        @foreach($districts as $district)
+                            <option value="{{ $district->id }}" 
+                                {{ old('district_id', $dham->district_id) == $district->id ? 'selected' : '' }}>
+                                {{ $district->name }}
+                            </option>
+                        @endforeach
+                    </select>
+                    @error('district_id')
+                        <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
+                    @enderror
+                </div>
+
                 {{-- Coordinates --}}
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <div>
@@ -64,9 +102,8 @@
                             {{ old('is_active', $dham->is_active) ? 'checked' : '' }}>
                         <span class="ml-2 text-gray-700 dark:text-gray-300">Active</span>
                     </label>
-
-
                 </div>
+
                 <div class="mt-4">
                     <label class="inline-flex items-center">
                         <input type="checkbox" name="is_winter" value="1"
@@ -75,6 +112,7 @@
                         <span class="ml-2 text-gray-700 dark:text-gray-300">Winter Dham</span>
                     </label>
                 </div>
+
                 {{-- Buttons --}}
                 <div class="mt-6 flex justify-end space-x-3">
                     <a href="{{ route('admin.dhams.index') }}"
@@ -86,6 +124,7 @@
                         Update
                     </button>
                 </div>
+
             </form>
         </div>
     </div>

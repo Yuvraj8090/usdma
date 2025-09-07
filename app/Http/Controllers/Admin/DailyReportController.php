@@ -26,6 +26,10 @@ class DailyReportController extends Controller
             $query->whereDate('report_date', $request->report_date);
         }
 
+        if ($request->filled('from_date')) {
+            $query->whereDate('from_date', $request->from_date);
+        }
+
         $reports = $query->orderBy('report_date', 'desc')->paginate(15);
         $districts = District::all();
         $fillables = DailyReportsFillable::all();
@@ -33,41 +37,41 @@ class DailyReportController extends Controller
         return view('admin.daily_reports.index', compact('reports', 'districts', 'fillables'));
     }
 
-   
-   public function create()
-{
-    $districts = District::all(); // rows
-    $parents = DailyReportsFillable::with('children')
-                ->whereNull('parent_id')
-                ->get(); // top-level headers with children
+    public function create()
+    {
+        $districts = District::all(); // rows
+        $parents = DailyReportsFillable::with('children')
+                    ->whereNull('parent_id')
+                    ->get(); // top-level headers with children
 
-    return view('admin.daily_reports.create', compact('districts', 'parents'));
-}
-
-    public function store(Request $request)
-{
-    $request->validate([
-        'report_date' => 'required|date',
-        'reports'     => 'required|array',
-    ]);
-
-    foreach ($request->reports as $districtId => $childReports) {
-        foreach ($childReports as $childId => $count) {
-            if ($count !== null && $count !== '') {
-                DailyReport::create([
-                    'district_id' => $districtId,
-                    'fillable_id' => $childId,
-                    'count'       => (int) $count,
-                    'report_date' => $request->report_date,
-                ]);
-            }
-        }
+        return view('admin.daily_reports.create', compact('districts', 'parents'));
     }
 
-    return redirect()->route('admin.daily_reports.index')
-                     ->with('success', 'Daily reports added successfully.');
-}
+    public function store(Request $request)
+    {
+        $request->validate([
+            'report_date' => 'required|date',
+            'from_date'   => 'required|date',
+            'reports'     => 'required|array',
+        ]);
 
+        foreach ($request->reports as $districtId => $childReports) {
+            foreach ($childReports as $childId => $count) {
+                if ($count !== null && $count !== '') {
+                    DailyReport::create([
+                        'district_id' => $districtId,
+                        'fillable_id' => $childId,
+                        'count'       => (int) $count,
+                        'report_date' => $request->report_date,
+                        'from_date'   => $request->from_date,
+                    ]);
+                }
+            }
+        }
+
+        return redirect()->route('admin.daily_reports.index')
+                         ->with('success', 'Daily reports added successfully.');
+    }
 
     public function edit(DailyReport $dailyReport)
     {
@@ -84,9 +88,10 @@ class DailyReportController extends Controller
             'fillable_id' => 'required|exists:daily_reports_fillable,id',
             'count'       => 'required|integer|min:0',
             'report_date' => 'required|date',
+            'from_date'   => 'required|date',
         ]);
 
-        $dailyReport->update($request->only('district_id', 'fillable_id', 'count', 'report_date'));
+        $dailyReport->update($request->only('district_id', 'fillable_id', 'count', 'report_date', 'from_date'));
 
         return redirect()->route('admin.daily_reports.index')
                          ->with('success', 'Daily report updated successfully.');
