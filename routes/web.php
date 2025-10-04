@@ -17,6 +17,7 @@ use App\Http\Controllers\PageController;
 use App\Http\Controllers\AnalyticsController;
 use App\Http\Controllers\Admin\AccidentalReportFillableController;
 use App\Http\Controllers\Admin\DhamController;
+use App\Http\Controllers\Admin\MeetingController;
 
 Route::get('/en/{slug}', [PageController::class, 'showPage'])->name('page.show');
 Route::get('/hi/{slug}', [PageController::class, 'showPageHi'])->name('page.show.hi');
@@ -54,7 +55,11 @@ Route::prefix('admin')->group(function () {
             Route::resource('district-users', DistrictUserController::class);
             
 
- 
+
+  // Meeting CRUD routes
+    Route::resource('meetings', MeetingController::class);
+
+
     // Daily Reports for Dhams
         Route::resource('district-reports', DistrictReportController::class);
 

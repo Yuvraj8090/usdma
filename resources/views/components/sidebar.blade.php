@@ -69,7 +69,8 @@
                     <x-sidebar.link route="admin.dhams.index" label="Dhams" icon="fas fa-place-of-worship"
                         :active="request()->routeIs('admin.dhams.*')" />
                 </x-sidebar.dropdown>
-
+                <x-sidebar.link route="admin.meetings.index" label="Meetings" icon="fas fa-calendar-alt"
+                    :active="request()->routeIs('admin.meetings.*')" />
             </x-sidebar.dropdown>
 
             {{-- Assignments --}}
