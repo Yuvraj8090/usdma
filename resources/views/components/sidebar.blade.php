@@ -36,7 +36,7 @@
             <x-sidebar.dropdown 
                 icon="fas fa-user-shield" 
                 label="Admin" 
-                :active="request()->routeIs('admin.users.*') || request()->routeIs('admin.roles.*') || request()->routeIs('admin.accidental_reports.*')">
+                :active="request()->routeIs('admin.daily_reports_dhams.*')  || request()->routeIs('admin.users.*') || request()->routeIs('admin.roles.*') || request()->routeIs('admin.accidental_reports.*')">
 
                 {{-- User Management --}}
                 <x-sidebar.dropdown 
@@ -98,7 +98,11 @@
                         :active="request()->routeIs('admin.dhams.*')" 
                     />
                 </x-sidebar.dropdown>
-
+<x-sidebar.link 
+                    route="admin.daily_reports_dhams.index" 
+                    label="Daily Reports (Dhams)" 
+                    :active="request()->routeIs('admin.daily_reports_dhams.*')" 
+                />
             </x-sidebar.dropdown>
 
             {{-- Assignments --}}
@@ -115,7 +119,7 @@
             <x-sidebar.dropdown 
                 icon="fas fa-file-alt" 
                 label="Daily Reports" 
-                :active="request()->routeIs('admin.daily_reports.*') || request()->routeIs('admin.daily_reports_fillable.*') || request()->routeIs('admin.district-reports.*') || request()->routeIs('admin.daily_reports_dhams.*') || request()->routeIs('admin.reports.*')">
+                :active="request()->routeIs('admin.daily_reports.*') || request()->routeIs('admin.daily_reports_fillable.*') || request()->routeIs('admin.district-reports.*') || request()->routeIs('admin.reports.*')">
 
                 <x-sidebar.link 
                     route="admin.daily_reports.index" 
@@ -132,11 +136,7 @@
                     label="District Reports" 
                     :active="request()->routeIs('admin.district-reports.*')" 
                 />
-                <x-sidebar.link 
-                    route="admin.daily_reports_dhams.index" 
-                    label="Daily Reports (Dhams)" 
-                    :active="request()->routeIs('admin.daily_reports_dhams.*')" 
-                />
+                
                 <x-sidebar.link 
                     route="admin.reports.index" 
                     label="File Uploads" 
