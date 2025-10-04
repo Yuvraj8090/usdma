@@ -44,7 +44,7 @@
                 <x-sidebar.dropdown icon="fas fa-file-alt" label="Daily Reports Management" :active="request()->routeIs('admin.daily_reports_fillable.*')">
 
 
-                    <x-sidebar.link route="admin.daily_reports_fillable.index" label="Report Categories"
+                    <x-sidebar.link route="admin.daily_reports_fillable.index" label="Report Headers"
                         icon="fas fa-list-alt" :active="request()->routeIs('admin.daily_reports_fillable.*')" />
 
 
@@ -54,7 +54,7 @@
                 <x-sidebar.dropdown icon="fas fa-car-crash" label="Accidental Reports" :active="request()->routeIs('admin.accidental-reports-fillable.*')">
 
 
-                    <x-sidebar.link route="admin.accidental-reports-fillable.index" label="Report Categories"
+                    <x-sidebar.link route="admin.accidental-reports-fillable.index" label="Report Headers"
                         icon="fas fa-list-alt" :active="request()->routeIs('admin.accidental-reports-fillable.*')" />
                 </x-sidebar.dropdown>
 
