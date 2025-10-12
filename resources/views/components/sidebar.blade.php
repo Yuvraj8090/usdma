@@ -92,6 +92,38 @@
             <x-sidebar.link route="admin.pages.list" label="Pages" icon="fas fa-file-contract" :active="request()->routeIs('admin.pages.*')" />
 
             {{-- Settings --}}
+            {{-- Resource & Asset Management --}}
+<x-sidebar.dropdown icon="fas fa-boxes" label="Resource Management"
+    :active="request()->routeIs('admin.equipment.*') ||
+             request()->routeIs('admin.manpower.*') ||
+             request()->routeIs('admin.relief_material.*') ||
+             request()->routeIs('admin.deployments.*')">
+
+    <x-sidebar.link 
+        route="admin.equipment.index" 
+        label="Equipment" 
+        icon="fas fa-cogs" 
+        :active="request()->routeIs('admin.equipment.*')" />
+
+    <x-sidebar.link 
+        route="admin.manpower.index" 
+        label="Manpower" 
+        icon="fas fa-users" 
+        :active="request()->routeIs('admin.manpower.*')" />
+
+    <x-sidebar.link 
+        route="admin.relief_material.index" 
+        label="Relief Materials" 
+        icon="fas fa-box-open" 
+        :active="request()->routeIs('admin.relief_material.*')" />
+
+    <x-sidebar.link 
+        route="admin.deployments.index" 
+        label="Deployments" 
+        icon="fas fa-truck" 
+        :active="request()->routeIs('admin.deployments.*')" />
+</x-sidebar.dropdown>
+
             <x-sidebar.link route="admin.settings.index" label="Settings" icon="fas fa-cog" :active="request()->routeIs('admin.settings.*')" />
             <x-sidebar.dropdown icon="fas fa-file-alt" label="Daily Reports Management" :active="request()->routeIs('admin.daily_reports.*') ||
                 request()->routeIs('admin.district-reports.*') ||

@@ -18,6 +18,13 @@ use App\Http\Controllers\AnalyticsController;
 use App\Http\Controllers\Admin\AccidentalReportFillableController;
 use App\Http\Controllers\Admin\DhamController;
 use App\Http\Controllers\Admin\MeetingController;
+use App\Http\Controllers\EquipmentController;
+use App\Http\Controllers\ManpowerController;
+use App\Http\Controllers\ReliefMaterialController;
+use App\Http\Controllers\DeploymentController;
+
+
+
 
 Route::get('/en/{slug}', [PageController::class, 'showPage'])->name('page.show');
 Route::get('/hi/{slug}', [PageController::class, 'showPageHi'])->name('page.show.hi');
@@ -51,9 +58,17 @@ Route::prefix('admin')->group(function () {
     Route::prefix('admin')
         ->name('admin.')
         ->group(function () {
-            
+
+Route::resource('relief_material', ReliefMaterialController::class);
+
+Route::resource('manpower', ManpowerController::class);
+
             Route::resource('district-users', DistrictUserController::class);
-            
+
+Route::resource('deployments', DeploymentController::class);
+
+
+Route::resource('equipment', EquipmentController::class);
 
 
   // Meeting CRUD routes
