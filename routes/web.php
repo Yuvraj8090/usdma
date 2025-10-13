@@ -22,6 +22,7 @@ use App\Http\Controllers\EquipmentController;
 use App\Http\Controllers\ManpowerController;
 use App\Http\Controllers\ReliefMaterialController;
 use App\Http\Controllers\DeploymentController;
+use App\Http\Controllers\Admin\EquipmentCategoryController;
 
 
 
@@ -67,6 +68,7 @@ Route::resource('manpower', ManpowerController::class);
 
 Route::resource('deployments', DeploymentController::class);
 
+    Route::resource('equipment_categories', EquipmentCategoryController::class);
 
 Route::resource('equipment', EquipmentController::class);
 

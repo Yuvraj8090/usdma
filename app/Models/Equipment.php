@@ -13,7 +13,12 @@ class Equipment extends Model
 
     protected $fillable = ['name', 'type', 'district_id', 'quantity', 'remarks', 'is_active'];
 
-    public function district() {
+    public function district()
+    {
         return $this->belongsTo(District::class);
+    }
+    public function category()
+    {
+        return $this->belongsTo(EquipmentCategory::class, 'category_id');
     }
 }
