@@ -12,44 +12,27 @@
 ])
 
 <div class="w-full overflow-x-auto">
-    <table id="{{ $id }}" class="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
+    <table id="{{ $id }}" class="min-w-full divide-y divide-gray-200 dark:divide-gray-700 text-center">
         <thead class="bg-indigo-500 text-white">
             <tr>
                 @foreach($headers as $header)
-                    <th class="px-4 py-2 text-center text-sm font-semibold">{{ $header }}</th>
+                    <th class="px-4 py-3 text-center text-sm font-semibold whitespace-nowrap uppercase tracking-wider">
+                        {{ $header }}
+                    </th>
                 @endforeach
             </tr>
         </thead>
-        <tbody class="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700">
+        <tbody class="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700 text-center">
             {{ $slot }}
         </tbody>
     </table>
 </div>
-
-<style>
-/* Tailwind pagination overrides */
-.dataTables_wrapper .dataTables_paginate {
-    display: flex;
-    justify-content: flex-end;
-    margin-top: 1rem;
-}
-.dataTables_wrapper .dataTables_paginate .paginate_button {
-    @apply mx-1 px-3 py-1 rounded shadow text-gray-700 hover:bg-gray-200 cursor-pointer;
-}
-.dataTables_wrapper .dataTables_paginate .paginate_button.current {
-    @apply bg-indigo-500 text-white shadow-md;
-}
-.dataTables_wrapper .dataTables_paginate .paginate_button.disabled {
-    @apply opacity-50 cursor-not-allowed;
-}
-</style>
 
 <script>
 document.addEventListener('DOMContentLoaded', function () {
     const tableId = "{{ $id }}";
     const table = $('#' + tableId);
 
-    // Find "Action" column
     let actionColumnIndex = -1;
     table.find('thead th').each(function(index) {
         if ($(this).text().trim().toLowerCase() === 'actions') actionColumnIndex = index;
@@ -80,7 +63,7 @@ document.addEventListener('DOMContentLoaded', function () {
         },
         customize: function(win) {
             $(win.document.body).find('table')
-                .addClass('min-w-full divide-y divide-gray-200')
+                .addClass('min-w-full divide-y divide-gray-200 text-center')
                 .css('font-size', 'inherit');
         }
     });
@@ -112,10 +95,11 @@ document.addEventListener('DOMContentLoaded', function () {
         container.append(createButton('»', pages-1, page === pages-1, false));
     };
 
+    // Initialize DataTable
     table.DataTable({
         dom: '<"flex justify-between mb-4"<"flex space-x-2"B><"flex space-x-2"f>>' +
-             '<"overflow-x-auto"t>' +
-             '<"flex justify-between mt-4"<"text-sm text-gray-500"i><"flex space-x-2"p>>',
+            '<"overflow-x-auto"t>' +
+            '<"flex justify-between mt-4"<"text-sm text-gray-500"i><"flex space-x-2"p>>',
         buttons,
         responsive: true,
         pageLength: {{ $pageLength }},
@@ -126,17 +110,25 @@ document.addEventListener('DOMContentLoaded', function () {
             lengthMenu: "Show _MENU_ {{ $resourceName }}",
             info: "Showing _START_ to _END_ of _TOTAL_ {{ $resourceName }}",
             infoEmpty: "No {{ $resourceName }} available",
+            emptyTable: "No data available",
+            zeroRecords: "No matching records found",
             paginate: { previous: '‹', next: '›' }
         },
         columnDefs: [
             { orderable: false, targets: actionColumnIndex, className: 'text-center' },
-            { targets: '_all', className: 'align-middle' }
+            { targets: '_all', className: 'align-middle text-center' }
         ],
         renderer: 'tailwind',
         initComplete: function() {
-            $('.dataTables_filter input').removeClass().addClass('border rounded px-2 py-1 text-sm focus:ring-2 focus:ring-indigo-500 focus:outline-none');
-            $('.dataTables_length select').removeClass().addClass('border rounded px-2 py-1 text-sm focus:ring-2 focus:ring-indigo-500 focus:outline-none');
-            $('.dt-buttons button').removeClass('dt-button').addClass('px-3 py-1 rounded shadow text-white');
+            $('.dataTables_filter input')
+                .removeClass()
+                .addClass('border rounded px-2 py-1 text-sm focus:ring-2 focus:ring-indigo-500 focus:outline-none');
+            $('.dataTables_length select')
+                .removeClass()
+                .addClass('border rounded px-2 py-1 text-sm focus:ring-2 focus:ring-indigo-500 focus:outline-none');
+            $('.dt-buttons button')
+                .removeClass('dt-button')
+                .addClass('px-3 py-1 rounded shadow text-white');
         }
     });
 });

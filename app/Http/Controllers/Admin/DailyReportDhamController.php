@@ -68,31 +68,32 @@ class DailyReportDhamController extends Controller
      */
 
 
-    public function downloadPdf(Request $request)
+public function downloadPdf(Request $request)
 {
-    [$fromDate, $endDate] = $this->getReportRange($request);
+    $reportDate = Carbon::parse($request->get('report_date'));
 
-    // 🔹 Reports with aggregated counts
+    // 🔹 Reports for the specific date only
     $reports = DailyReportDham::withoutTrashed()
         ->selectRaw('dham_id, fillable_id, SUM(count) as total_count')
-        ->whereBetween('report_date', [$fromDate, $endDate])
+        ->whereDate('report_date', $reportDate)
         ->groupBy('dham_id', 'fillable_id')
         ->get()
         ->keyBy(fn($r) => $r->dham_id . '_' . $r->fillable_id);
 
-    // 🔹 Earliest entry date per dham (based on report_date now)
+    // 🔹 Earliest entry date per dham
     $firstEntries = DailyReportDham::withoutTrashed()
         ->selectRaw('dham_id, MIN(report_date) as first_date')
         ->groupBy('dham_id')
-        ->pluck('first_date', 'dham_id'); // => [dham_id => first_report_date]
+        ->pluck('first_date', 'dham_id');
 
     $dhams   = $this->getDhams();
     $parents = $this->getFillableParents();
 
     return view('admin.daily_reports_dhams.pdf', compact('reports', 'dhams', 'parents', 'firstEntries'))
-        ->with('fromDate', $fromDate->toDateString())
-        ->with('reportDate', $endDate->toDateString());
+        ->with('fromDate', $reportDate->toDateString())
+        ->with('reportDate', $reportDate->toDateString());
 }
+
 
 
 

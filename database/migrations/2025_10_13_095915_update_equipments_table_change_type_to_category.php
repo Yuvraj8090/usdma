@@ -3,6 +3,7 @@
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
+use Illuminate\Support\Facades\DB;
 
 return new class extends Migration
 {
@@ -17,13 +18,15 @@ return new class extends Migration
                 $table->dropColumn('type');
             }
 
-            // Add category_id column as foreign key
-            $table->unsignedBigInteger('category_id')->after('name');
+            // Only add category_id if it does NOT exist
+            if (!Schema::hasColumn('equipments', 'category_id')) {
+                $table->unsignedBigInteger('category_id')->after('name');
 
-            $table->foreign('category_id')
-                  ->references('id')
-                  ->on('equipment_categories')
-                  ->onDelete('cascade'); // If category deleted, equipment also deleted
+                $table->foreign('category_id')
+                    ->references('id')
+                    ->on('equipment_categories')
+                    ->onDelete('cascade');
+            }
         });
     }
 
@@ -33,12 +36,16 @@ return new class extends Migration
     public function down(): void
     {
         Schema::table('equipments', function (Blueprint $table) {
-            // Remove foreign key first
-            $table->dropForeign(['category_id']);
-            $table->dropColumn('category_id');
+            // Drop foreign key only if column exists
+            if (Schema::hasColumn('equipments', 'category_id')) {
+                $table->dropForeign(['category_id']);
+                $table->dropColumn('category_id');
+            }
 
-            // Re-add type column if rolled back
-            $table->string('type')->nullable();
+            // Re-add type column if needed
+            if (!Schema::hasColumn('equipments', 'type')) {
+                $table->string('type')->nullable();
+            }
         });
     }
 };

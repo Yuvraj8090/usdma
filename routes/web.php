@@ -5,7 +5,7 @@ use App\Http\Controllers\RoleController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\Admin\StateController;
 use App\Http\Controllers\Admin\AccidentalReportController;
- use App\Http\Controllers\Admin\DistrictUserController;
+use App\Http\Controllers\Admin\DistrictUserController;
 use App\Http\Controllers\Admin\DailyReportDhamController;
 use App\Http\Controllers\Admin\DailyReportsFillableController;
 use App\Http\Controllers\Admin\DailyReportFileController;
@@ -23,9 +23,7 @@ use App\Http\Controllers\ManpowerController;
 use App\Http\Controllers\ReliefMaterialController;
 use App\Http\Controllers\DeploymentController;
 use App\Http\Controllers\Admin\EquipmentCategoryController;
-
-
-
+use App\Http\Controllers\Admin\SeasonController;
 
 Route::get('/en/{slug}', [PageController::class, 'showPage'])->name('page.show');
 Route::get('/hi/{slug}', [PageController::class, 'showPageHi'])->name('page.show.hi');
@@ -43,48 +41,45 @@ Route::get('/admin', function () {
     return redirect()->route('login'); // Adjust this route name as needed
 });
 Route::middleware(['auth:sanctum', config('jetstream.auth_session'), 'verified'])->group(function () {
-       Route::post('/admin/clear-cache', [PageController::class, 'clearCache'])->name('admin.clear.cache');
-Route::get('admin/daily-reports-dhams/pdf', [DailyReportDhamController::class, 'downloadPdf'])
-    ->name('admin.daily_reports_dhams.pdf');
+    Route::post('/admin/clear-cache', [PageController::class, 'clearCache'])->name('admin.clear.cache');
+    Route::get('admin/daily-reports-dhams/pdf', [DailyReportDhamController::class, 'downloadPdf'])->name('admin.daily_reports_dhams.pdf');
 
     // Dashboard route
     Route::get('/admin/dashboard', [AnalyticsController::class, 'index'])->name('dashboard');
 
-Route::prefix('admin')->group(function () {
-    Route::get('/reports', [DailyReportFileController::class, 'index'])->name('admin.reports.index');
-    Route::post('/reports', [DailyReportFileController::class, 'store'])->name('admin.reports.store');
-});
+    Route::prefix('admin')->group(function () {
+        Route::get('/reports', [DailyReportFileController::class, 'index'])->name('admin.reports.index');
+        Route::post('/reports', [DailyReportFileController::class, 'store'])->name('admin.reports.store');
+    });
 
+    
     // Admin routes group
     Route::prefix('admin')
-        ->name('admin.')
-        ->group(function () {
+    ->name('admin.')
+    ->group(function () {
+        Route::resource('relief_material', ReliefMaterialController::class);
+        Route::resource('seasons', SeasonController::class);
 
-Route::resource('relief_material', ReliefMaterialController::class);
-
-Route::resource('manpower', ManpowerController::class);
+            Route::resource('manpower', ManpowerController::class);
 
             Route::resource('district-users', DistrictUserController::class);
 
-Route::resource('deployments', DeploymentController::class);
+            Route::resource('deployments', DeploymentController::class);
 
-    Route::resource('equipment_categories', EquipmentCategoryController::class);
+            Route::resource('equipment_categories', EquipmentCategoryController::class);
 
-Route::resource('equipment', EquipmentController::class);
+            Route::resource('equipment', EquipmentController::class);
 
+            // Meeting CRUD routes
+            Route::resource('meetings', MeetingController::class);
 
-  // Meeting CRUD routes
-    Route::resource('meetings', MeetingController::class);
-
-
-    // Daily Reports for Dhams
-        Route::resource('district-reports', DistrictReportController::class);
+            // Daily Reports for Dhams
+            Route::resource('district-reports', DistrictReportController::class);
 
             Route::resource('daily_reports_fillable', DailyReportsFillableController::class);
             Route::resource('daily_reports', DailyReportController::class);
             Route::resource('daily_reports_dhams', DailyReportDhamController::class);
-            Route::delete('daily_reports_dhams/{daily_reports_dham}/force', [DailyReportDhamController::class, 'forceDestroy'])
-    ->name('daily_reports_dhams.forceDestroy');
+            Route::delete('daily_reports_dhams/{daily_reports_dham}/force', [DailyReportDhamController::class, 'forceDestroy'])->name('daily_reports_dhams.forceDestroy');
             Route::resource('districts', DistrictController::class);
 
             Route::resource('accidental_reports', AccidentalReportController::class);
@@ -98,7 +93,6 @@ Route::resource('equipment', EquipmentController::class);
             Route::resource('media-files', App\Http\Controllers\Admin\MediaFileController::class);
             Route::get('media-files/{mediaFile}/download', [App\Http\Controllers\Admin\MediaFileController::class, 'download'])->name('media-files.download');
 
-         
             Route::resource('settings', \App\Http\Controllers\Admin\SettingController::class);
             Route::resource('navbar-items', NavbarItemController::class);
             Route::post('navbar-items/update-order', [NavbarItemController::class, 'updateOrder'])->name('navbar-items.update-order');
@@ -115,4 +109,3 @@ Route::resource('equipment', EquipmentController::class);
             Route::resource('users', UserController::class);
         });
 });
-
