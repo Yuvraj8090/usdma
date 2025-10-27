@@ -67,43 +67,76 @@ class DailyReportDhamController extends Controller
      * Download or view PDF
      */
 
-    public function downloadPdf(Request $request)   
-    {
-        $reportDate = Carbon::parse($request->get('report_date'));
+public function downloadPdf(Request $request)
+{
+    $reportDate = Carbon::parse($request->get('report_date'));
+    $year = $request->get('year', $reportDate->year);
 
-        /* ======================================================
-         * 🔹 1. DHAM DAILY REPORTS
-         * ====================================================== */
-        $dhamReports = DailyReportDham::withoutTrashed()->selectRaw('dham_id, fillable_id, SUM(count) as total_count')->whereDate('report_date', $reportDate)->groupBy('dham_id', 'fillable_id')->get()->keyBy(fn($r) => $r->dham_id . '_' . $r->fillable_id);
+    /* ======================================================
+     * 🔹 1. DHAM DAILY REPORTS (same as before)
+     * ====================================================== */
+    $dhamReports = DailyReportDham::withoutTrashed()
+        ->selectRaw('dham_id, fillable_id, SUM(count) as total_count')
+        ->whereDate('report_date', $reportDate)
+        ->groupBy('dham_id', 'fillable_id')
+        ->get()
+        ->keyBy(fn($r) => $r->dham_id . '_' . $r->fillable_id);
 
-        $firstDhamEntries = DailyReportDham::withoutTrashed()->selectRaw('dham_id, MIN(report_date) as first_date')->groupBy('dham_id')->pluck('first_date', 'dham_id');
+    $firstDhamEntries = DailyReportDham::withoutTrashed()
+        ->selectRaw('dham_id, MIN(report_date) as first_date')
+        ->groupBy('dham_id')
+        ->pluck('first_date', 'dham_id');
 
-        $dhams = $this->getDhams();
-        $dhamParents = $this->getFillableParents();
+    $dhams = $this->getDhams();
+    $dhamParents = $this->getFillableParents();
 
-        /* ======================================================
-         * 🔹 2. ACCIDENTAL REPORTS
-         * ====================================================== */
-        $accidentalReports = AccidentalReport::with(['district', 'fillableCategory'])
-    ->withoutTrashed()
-    ->whereDate('report_date', $reportDate)
-    ->get()
-    ->groupBy('district_id');
+    /* ======================================================
+     * 🔹 2. ACCIDENTAL REPORTS (from 1 April → till latest)
+     * ====================================================== */
 
+    $financialYearStart = Carbon::createFromDate($year, 4, 1); // 01-04-YYYY
+    $latestAccidentalDate = AccidentalReport::withoutTrashed()->max('report_date');
 
-        $firstAccidentalEntries = AccidentalReport::withoutTrashed()->selectRaw('district_id, MIN(report_date) as first_date')->groupBy('district_id')->pluck('first_date', 'district_id');
+    // Aggregate between FY start and latest report
+    $accidentalReports = AccidentalReport::withoutTrashed()
+        ->whereBetween('report_date', [$financialYearStart, $latestAccidentalDate])
+        ->selectRaw('district_id, fillable_id, SUM(count) as total_count')
+        ->groupBy('district_id', 'fillable_id')
+        ->get()
+        ->groupBy('district_id');
 
-        $districts = District::withoutTrashed()->get();
-        $accidentalParents = AccidentalReportFillable::with('children')->whereNull('parent_id')->withoutTrashed()->get();
+    // First entry per district in this FY
+    $firstAccidentalEntries = AccidentalReport::withoutTrashed()
+        ->where('report_date', '>=', $financialYearStart)
+        ->selectRaw('district_id, MIN(report_date) as first_date')
+        ->groupBy('district_id')
+        ->pluck('first_date', 'district_id');
 
-        /* ======================================================
-         * 🔹 3. RETURN COMBINED VIEW
-         * ====================================================== */
-        return view('admin.daily_reports_dhams.pdf', compact('reportDate', 'dhamReports', 'dhams', 'dhamParents', 'firstDhamEntries', 'accidentalReports', 'districts', 'accidentalParents', 'firstAccidentalEntries'))->with([
-            'fromDate' => $reportDate->toDateString(),
-            'reportDate' => $reportDate->toDateString(),
-        ]);
-    }
+    $districts = District::withoutTrashed()->get();
+
+    $accidentalParents = AccidentalReportFillable::with('children')
+        ->whereNull('parent_id')
+        ->withoutTrashed()
+        ->get();
+
+    /* ======================================================
+     * 🔹 3. RETURN VIEW
+     * ====================================================== */
+    return view('admin.daily_reports_dhams.pdf', [
+        'reportDate' => $reportDate->toDateString(),
+        'fromDate' => $financialYearStart->format('Y-m-d'),
+        'tillDate' => $latestAccidentalDate ? Carbon::parse($latestAccidentalDate)->format('Y-m-d') : null,
+        'dhamReports' => $dhamReports,
+        'dhams' => $dhams,
+        'dhamParents' => $dhamParents,
+        'firstDhamEntries' => $firstDhamEntries,
+        'accidentalReports' => $accidentalReports,
+        'districts' => $districts,
+        'accidentalParents' => $accidentalParents,
+        'firstAccidentalEntries' => $firstAccidentalEntries,
+    ]);
+}
+
 
     /**
      * Show edit form

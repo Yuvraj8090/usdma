@@ -1,17 +1,27 @@
-<div class="title-box">
-    <h2>🚑 आकस्मिक रिपोर्ट्स (जिलावार)</h2>
-    <p>रिपोर्ट तिथि: {{ $reportDate ?? '-' }}</p>
+<div class="title-box" style="text-align: center; margin-bottom:20px">
+    <h3>Natural Disaster Report (Districtwise)</h3>
+    <h4>as latest update by the districts</h4>
+
+    <div class="summary-line">
+        Summary (Date 
+        {{ \Carbon\Carbon::parse($fromDate)->format('d-m-Y') }}
+        to Till date )
+    </div>
 </div>
 
-<table>
+<table border="1" cellspacing="0" cellpadding="4" width="100%">
     <thead>
         <tr>
+            <th>Sl. No.</th>
             <th>जिला</th>
             @foreach ($accidentalParents as $parent)
-                <th class="sub-header" colspan="{{ $parent->children->count() }}">{{ $parent->name }}</th>
+                <th colspan="{{ $parent->children->count() }}" style="text-align:center">
+                    {{ $parent->name }}
+                </th>
             @endforeach
         </tr>
         <tr>
+            <th></th>
             <th></th>
             @foreach ($accidentalParents as $parent)
                 @foreach ($parent->children as $child)
@@ -21,29 +31,37 @@
         </tr>
     </thead>
     <tbody>
+        @php
+            $columnTotals = [];
+            $sl = 1;
+        @endphp
+
         @foreach ($districts as $district)
             <tr>
+                <td style="text-align:center;">{{ $sl++ }}</td>
                 <td>
                     {{ $district->name }}
                     @if ($firstAccidentalEntries->has($district->id))
-                        <br>
-                        <small>पहली प्रविष्टि:
-                            {{ \Carbon\Carbon::parse($firstAccidentalEntries[$district->id])->format('d-m-Y') }}</small>
+                       
+                       
                     @endif
                 </td>
 
                 @foreach ($accidentalParents as $parent)
                     @foreach ($parent->children as $child)
                         @php
-                            // ✅ Safe check — handle if no report exists for this district
                             $districtReports = $accidentalReports[$district->id] ?? collect();
-                            $count = optional($districtReports->where('fillable_id', $child->id)->first())->count ?? 0;
+                            $report = $districtReports->firstWhere('fillable_id', $child->id);
+                            $count = $report->total_count ?? 0;
+
+                            $columnTotals[$child->id] = ($columnTotals[$child->id] ?? 0) + $count;
                         @endphp
-                        <td>{{ $count }}</td>
+                        <td style="text-align:center">{{ $count }}</td>
                     @endforeach
                 @endforeach
             </tr>
         @endforeach
 
+       
     </tbody>
 </table>

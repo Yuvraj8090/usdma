@@ -70,8 +70,7 @@
         @include('admin.daily_reports_dhams.partials.dham_pdf_section')
 
         <!-- Divider -->
-        <div class="section-divider"></div>
-
+       
         <!-- 🚑 ACCIDENTAL REPORT SECTION -->
         @include('admin.daily_reports_dhams.partials.accidental_pdf_section')
 
