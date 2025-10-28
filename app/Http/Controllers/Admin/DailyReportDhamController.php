@@ -3,14 +3,17 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
-use App\Models\DailyReportDham;
-use App\Models\DailyReportsFillable;
-use App\Models\Dham;
-use App\Models\AccidentalReport;
-use App\Models\AccidentalReportFillable;
-use App\Models\District;
+use App\Models\{
+    DailyReportDham,
+    DailyReportsFillable,
+    Dham,
+    AccidentalReport,
+    AccidentalReportFillable,
+    District
+};
 use Illuminate\Http\Request;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\Cache;
 
 class DailyReportDhamController extends Controller
 {
@@ -19,7 +22,7 @@ class DailyReportDhamController extends Controller
      */
     public function index(Request $request)
     {
-        $reports = $this->getFilteredReports($request, true); // paginated
+        $reports = $this->getFilteredReports($request, true);
         $dhams = $this->getDhams();
         $fillables = $this->getFillables();
 
@@ -31,10 +34,10 @@ class DailyReportDhamController extends Controller
      */
     public function create()
     {
-        $dhams = $this->getDhams();
-        $parents = $this->getFillableParents();
-
-        return view('admin.daily_reports_dhams.create', compact('dhams', 'parents'));
+        return view('admin.daily_reports_dhams.create', [
+            'dhams' => $this->getDhams(),
+            'parents' => $this->getFillableParents()
+        ]);
     }
 
     /**
@@ -47,109 +50,62 @@ class DailyReportDhamController extends Controller
             'reports' => 'required|array',
         ]);
 
-        foreach ($request->reports as $dhamId => $childReports) {
-            foreach ($childReports as $childId => $count) {
-                if (!empty($count) && (int) $count > 0) {
-                    DailyReportDham::create([
-                        'dham_id' => $dhamId,
-                        'fillable_id' => $childId,
-                        'count' => (int) $count,
-                        'report_date' => $request->report_date,
-                    ]);
-                }
-            }
-        }
+        $this->insertDhamReports($request->report_date, $request->reports);
 
-        return redirect()->route('admin.daily_reports_dhams.index')->with('success', 'Daily reports for Dhams added successfully.');
+        return redirect()
+            ->route('admin.daily_reports_dhams.index')
+            ->with('success', 'Daily reports for Dhams added successfully.');
     }
 
     /**
      * Download or view PDF
      */
+    public function downloadPdf(Request $request)
+    {
+        [$reportDate, $year] = $this->getReportDateAndYear($request);
 
-public function downloadPdf(Request $request)
-{
-    $reportDate = Carbon::parse($request->get('report_date'));
-    $year = $request->get('year', $reportDate->year);
+        // Cached data for reuse (improves performance)
+        $dhams = $this->getDhams();
+        $dhamParents = $this->getFillableParents();
+        $districts = $this->getDistricts();
+        $accidentalParents = $this->getAccidentalParents();
 
-    /* ======================================================
-     * 🔹 1. DHAM DAILY REPORTS (same as before)
-     * ====================================================== */
-    $dhamReports = DailyReportDham::withoutTrashed()
-        ->selectRaw('dham_id, fillable_id, SUM(count) as total_count')
-        ->whereDate('report_date', $reportDate)
-        ->groupBy('dham_id', 'fillable_id')
-        ->get()
-        ->keyBy(fn($r) => $r->dham_id . '_' . $r->fillable_id);
+        // Dham reports
+        $dhamReports = $this->getDhamReports($reportDate);
+        $firstDhamEntries = $this->getFirstDhamEntries();
 
-    $firstDhamEntries = DailyReportDham::withoutTrashed()
-        ->selectRaw('dham_id, MIN(report_date) as first_date')
-        ->groupBy('dham_id')
-        ->pluck('first_date', 'dham_id');
-
-    $dhams = $this->getDhams();
-    $dhamParents = $this->getFillableParents();
-
-    /* ======================================================
-     * 🔹 2. ACCIDENTAL REPORTS (from 1 April → till latest)
-     * ====================================================== */
-
-    $financialYearStart = Carbon::createFromDate($year, 4, 1); // 01-04-YYYY
-    $latestAccidentalDate = AccidentalReport::withoutTrashed()->max('report_date');
-
-    // Aggregate between FY start and latest report
-    $accidentalReports = AccidentalReport::withoutTrashed()
-        ->whereBetween('report_date', [$financialYearStart, $latestAccidentalDate])
-        ->selectRaw('district_id, fillable_id, SUM(count) as total_count')
-        ->groupBy('district_id', 'fillable_id')
-        ->get()
-        ->groupBy('district_id');
-
-    // First entry per district in this FY
-    $firstAccidentalEntries = AccidentalReport::withoutTrashed()
-        ->where('report_date', '>=', $financialYearStart)
-        ->selectRaw('district_id, MIN(report_date) as first_date')
-        ->groupBy('district_id')
-        ->pluck('first_date', 'district_id');
-
-    $districts = District::withoutTrashed()->get();
-
-    $accidentalParents = AccidentalReportFillable::with('children')
-        ->whereNull('parent_id')
-        ->withoutTrashed()
-        ->get();
-
-    /* ======================================================
-     * 🔹 3. RETURN VIEW
-     * ====================================================== */
-    return view('admin.daily_reports_dhams.pdf', [
-        'reportDate' => $reportDate->toDateString(),
-        'fromDate' => $financialYearStart->format('Y-m-d'),
-        'tillDate' => $latestAccidentalDate ? Carbon::parse($latestAccidentalDate)->format('Y-m-d') : null,
-        'dhamReports' => $dhamReports,
-        'dhams' => $dhams,
-        'dhamParents' => $dhamParents,
-        'firstDhamEntries' => $firstDhamEntries,
-        'accidentalReports' => $accidentalReports,
-        'districts' => $districts,
-        'accidentalParents' => $accidentalParents,
-        'firstAccidentalEntries' => $firstAccidentalEntries,
-    ]);
-}
-
+        // Accidental reports
+        [$financialYearStart, $latestAccidentalDate] = $this->getAccidentalDateRange($year);
+        $accidentalReports = $this->getAccidentalReports($financialYearStart, $latestAccidentalDate);
+        $firstAccidentalEntries = $this->getFirstAccidentalEntries($financialYearStart);
+$fromDate = Carbon::parse($request->get('report_date'))->copy()->startOfMonth();
+$toDate = Carbon::parse($request->get('report_date'));
+        return view('admin.daily_reports_dhams.pdf', compact(
+            'reportDate',
+            'financialYearStart',
+            'latestAccidentalDate',
+            'dhamReports',
+            'dhams',
+            'fromDate',
+    'toDate',
+            'dhamParents',
+            'firstDhamEntries',
+            'accidentalReports',
+            'districts',
+            'accidentalParents',
+            'firstAccidentalEntries'
+        ));
+    }
 
     /**
-     * Show edit form
+     * Edit a specific report
      */
     public function edit(DailyReportDham $daily_reports_dham)
     {
-        $dhams = $this->getDhams();
-        $fillables = $this->getFillables();
-
         return view('admin.daily_reports_dhams.edit', [
             'dailyReportDham' => $daily_reports_dham,
-            'dhams' => $dhams,
-            'fillables' => $fillables,
+            'dhams' => $this->getDhams(),
+            'fillables' => $this->getFillables(),
         ]);
     }
 
@@ -165,7 +121,7 @@ public function downloadPdf(Request $request)
             'report_date' => 'required|date',
         ]);
 
-        if ($request->count && (int) $request->count > 0) {
+        if ($request->count > 0) {
             $daily_reports_dham->update($request->only('dham_id', 'fillable_id', 'count', 'report_date'));
             $msg = 'Daily report updated successfully.';
         } else {
@@ -181,8 +137,7 @@ public function downloadPdf(Request $request)
     public function destroy(DailyReportDham $daily_reports_dham)
     {
         $daily_reports_dham->delete();
-
-        return redirect()->route('admin.daily_reports_dhams.index')->with('success', 'Daily report deleted successfully.');
+        return back()->with('success', 'Daily report deleted successfully.');
     }
 
     /**
@@ -191,58 +146,118 @@ public function downloadPdf(Request $request)
     public function forceDestroy(DailyReportDham $daily_reports_dham)
     {
         $daily_reports_dham->forceDelete();
-
-        return redirect()->route('admin.daily_reports_dhams.index')->with('success', 'Daily report permanently deleted.');
+        return back()->with('success', 'Daily report permanently deleted.');
     }
 
     /* ======================================================
-     * 🔹 PRIVATE HELPERS
+     * 🔹 PRIVATE HELPER FUNCTIONS
      * ====================================================== */
 
-    private function getDhams()
+    /** Cached data accessors (5 min cache to reduce DB hits) */
+    private function getDhams()       { return Cache::remember('dhams', 300, fn() => Dham::withoutTrashed()->get()); }
+    private function getFillables()   { return Cache::remember('fillables', 300, fn() => DailyReportsFillable::withoutTrashed()->get()); }
+    private function getFillableParents() { return Cache::remember('fillable_parents', 300, fn() => DailyReportsFillable::with('children')->whereNull('parent_id')->withoutTrashed()->get()); }
+    private function getDistricts()   { return Cache::remember('districts', 300, fn() => District::withoutTrashed()->get()); }
+    private function getAccidentalParents() { return Cache::remember('accidental_parents', 300, fn() => AccidentalReportFillable::with('children')->whereNull('parent_id')->withoutTrashed()->get()); }
+
+    /** Insert new dham reports efficiently */
+    private function insertDhamReports(string $reportDate, array $reports): void
     {
-        return Dham::withoutTrashed()->get();
+        $insertData = [];
+
+        foreach ($reports as $dhamId => $childReports) {
+            foreach ($childReports as $childId => $count) {
+                $count = (int) $count;
+                if ($count > 0) {
+                    $insertData[] = [
+                        'dham_id' => $dhamId,
+                        'fillable_id' => $childId,
+                        'count' => $count,
+                        'report_date' => $reportDate,
+                        'created_at' => now(),
+                        'updated_at' => now(),
+                    ];
+                }
+            }
+        }
+
+        if (!empty($insertData)) {
+            DailyReportDham::insert($insertData);
+        }
     }
 
-    private function getFillables()
+    /** Get Dham reports for a given date */
+    private function getDhamReports(Carbon $reportDate)
     {
-        return DailyReportsFillable::withoutTrashed()->get();
+        return DailyReportDham::withoutTrashed()
+            ->selectRaw('dham_id, fillable_id, SUM(count) as total_count')
+            ->whereDate('report_date', $reportDate)
+            ->groupBy('dham_id', 'fillable_id')
+            ->get()
+            ->keyBy(fn($r) => $r->dham_id . '_' . $r->fillable_id);
     }
 
-    private function getFillableParents()
+    /** Get first report per Dham */
+    private function getFirstDhamEntries()
     {
-        return DailyReportsFillable::with('children')->whereNull('parent_id')->withoutTrashed()->get();
+        return DailyReportDham::withoutTrashed()
+            ->selectRaw('dham_id, MIN(report_date) as first_date')
+            ->groupBy('dham_id')
+            ->pluck('first_date', 'dham_id');
     }
 
+    /** Get date and year info */
+    private function getReportDateAndYear(Request $request): array
+    {
+        $reportDate = Carbon::parse($request->get('report_date', now()));
+        $year = $request->get('year', $reportDate->year);
+        return [$reportDate, $year];
+    }
+
+    /** Get accidental report date range */
+    private function getAccidentalDateRange(int $year): array
+    {
+        $financialYearStart = Carbon::createFromDate($year, 4, 1);
+        $latestAccidentalDate = AccidentalReport::withoutTrashed()->max('report_date');
+        return [$financialYearStart, $latestAccidentalDate];
+    }
+
+    /** Get accidental reports */
+    private function getAccidentalReports(Carbon $start, ?string $end)
+    {
+        if (!$end) return collect();
+
+        return AccidentalReport::withoutTrashed()
+            ->whereBetween('report_date', [$start, $end])
+            ->selectRaw('district_id, fillable_id, SUM(count) as total_count')
+            ->groupBy('district_id', 'fillable_id')
+            ->get()
+            ->groupBy('district_id');
+    }
+
+    /** Get first accidental entries */
+    private function getFirstAccidentalEntries(Carbon $start)
+    {
+        return AccidentalReport::withoutTrashed()
+            ->where('report_date', '>=', $start)
+            ->selectRaw('district_id, MIN(report_date) as first_date')
+            ->groupBy('district_id')
+            ->pluck('first_date', 'district_id');
+    }
+
+    /** Apply filters for listing */
     private function getFilteredReports(Request $request, bool $paginate = false)
     {
         $query = DailyReportDham::with(['dham', 'fillableCategory'])->withoutTrashed();
 
-        if ($request->filled('dham_id')) {
-            $query->where('dham_id', $request->dham_id);
+        foreach (['dham_id', 'fillable_id', 'report_date'] as $filter) {
+            if ($request->filled($filter)) {
+                $query->where($filter === 'report_date' ? fn($q) => $q->whereDate($filter, $request->$filter) : $filter, $request->$filter);
+            }
         }
 
-        if ($request->filled('fillable_id')) {
-            $query->where('fillable_id', $request->fillable_id);
-        }
-
-        if ($request->filled('report_date')) {
-            $query->whereDate('report_date', $request->report_date);
-        }
-
-        return $paginate ? $query->orderBy('report_date', 'desc')->paginate(15) : $query->orderBy('report_date', 'desc')->get();
-    }
-
-    /**
-     * Get report range based on financial year and first entry
-     */
-    private function getReportRange(Request $request): array
-    {
-        $year = $request->input('year', now()->year);
-
-        $financialYearStart = Carbon::createFromDate($year, 4, 1)->startOfDay();
-        $endDate = $request->filled('report_date') ? Carbon::parse($request->report_date)->endOfDay() : now()->endOfDay();
-
-        return [$financialYearStart, $endDate];
+        return $paginate
+            ? $query->latest('report_date')->paginate(15)
+            : $query->latest('report_date')->get();
     }
 }
