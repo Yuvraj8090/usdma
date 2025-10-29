@@ -3,7 +3,7 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
-use App\Models\{DailyReportDham, DailyReportsFillable, Dham, AccidentalReport, AccidentalReportFillable, District};
+use App\Models\{DailyReportDham, DailyReportsFillable, Dham, AccidentalReport, AccidentalReportFillable, District,NaturalDisasterReport,NaturalDisasterReportsFillable};
 use Illuminate\Http\Request;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Cache;
@@ -51,28 +51,105 @@ class DailyReportDhamController extends Controller
     /**
      * Download or view PDF
      */
-    public function downloadPdf(Request $request)
-    {
-        [$reportDate, $year] = $this->getReportDateAndYear($request);
+    /**
+ * Download or view PDF including Dhams, Accidental & Natural Disaster Reports
+ */
+public function downloadPdf(Request $request)
+{
+    [$reportDate, $year] = $this->getReportDateAndYear($request);
 
-        // Cached data for reuse (improves performance)
-        $dhams = $this->getDhams();
-        $dhamParents = $this->getFillableParents();
-        $districts = $this->getDistricts();
-        $accidentalParents = $this->getAccidentalParents();
+    // Cache-heavy data to reduce DB load
+    $dhams = $this->getDhams();
+    $dhamParents = $this->getFillableParents();
+    $districts = $this->getDistricts();
+    $accidentalParents = $this->getAccidentalParents();
+    $disasterParents = $this->getDisasterParents();
 
-        // Dham reports
-        $dhamReports = $this->getDhamReports($reportDate);
-        $firstDhamEntries = $this->getFirstDhamEntries();
+    // Dham reports
+    $dhamReports = $this->getDhamReports($reportDate);
+    $firstDhamEntries = $this->getFirstDhamEntries();
 
-        // Accidental reports
-        [$financialYearStart, $latestAccidentalDate] = $this->getAccidentalDateRange($year);
-        $accidentalReports = $this->getAccidentalReports($financialYearStart, $latestAccidentalDate);
-        $firstAccidentalEntries = $this->getFirstAccidentalEntries($financialYearStart);
-        $fromDate = Carbon::parse($request->get('report_date'))->copy()->startOfMonth();
-        $toDate = Carbon::parse($request->get('report_date'));
-        return view('admin.daily_reports_dhams.pdf', compact('reportDate', 'financialYearStart', 'latestAccidentalDate', 'dhamReports', 'dhams', 'fromDate', 'toDate', 'dhamParents', 'firstDhamEntries', 'accidentalReports', 'districts', 'accidentalParents', 'firstAccidentalEntries'));
+    // Accidental reports
+    [$financialYearStart, $latestAccidentalDate] = $this->getAccidentalDateRange($year);
+    $accidentalReports = $this->getAccidentalReports($financialYearStart, $latestAccidentalDate);
+    $firstAccidentalEntries = $this->getFirstAccidentalEntries($financialYearStart);
+
+    // Natural Disaster reports
+    [$disasterYearStart, $latestDisasterDate] = $this->getDisasterDateRange($year);
+    $disasterReports = $this->getDisasterReports($disasterYearStart, $latestDisasterDate);
+    $firstDisasterEntries = $this->getFirstDisasterEntries($disasterYearStart);
+
+    // Date range for PDF header
+    $fromDate = Carbon::parse($request->get('report_date'))->copy()->startOfMonth();
+    $toDate = Carbon::parse($request->get('report_date'));
+
+    return view('admin.daily_reports_dhams.pdf', compact(
+        'reportDate',
+        'financialYearStart',
+        'latestAccidentalDate',
+        'dhamReports',
+        'dhams',
+        'fromDate',
+        'toDate',
+        'dhamParents',
+        'firstDhamEntries',
+        'accidentalReports',
+        'districts',
+        'accidentalParents',
+        'firstAccidentalEntries',
+        'disasterReports',
+        'disasterParents',
+        'firstDisasterEntries',
+        'latestDisasterDate',
+        'disasterYearStart'
+    ));
+}
+/** ==================== NATURAL DISASTER HELPERS ==================== */
+
+/** Get disaster parent categories with children */
+private function getDisasterParents()
+{
+    return Cache::remember('disaster_parents', 300, fn() =>
+        NaturalDisasterReportsFillable::with('children')
+            ->whereNull('parent_id')
+            ->withoutTrashed()
+            ->get()
+    );
+}
+
+/** Get date range (financial year + latest disaster report date) */
+private function getDisasterDateRange(int $year): array
+{
+    $disasterYearStart = Carbon::createFromDate($year, 4, 1);
+    $latestDisasterDate = NaturalDisasterReport::withoutTrashed()->max('report_date');
+    return [$disasterYearStart, $latestDisasterDate];
+}
+
+/** Get aggregated natural disaster reports for a date range */
+private function getDisasterReports(Carbon $start, ?string $end)
+{
+    if (!$end) {
+        return collect();
     }
+
+    return NaturalDisasterReport::withoutTrashed()
+        ->whereBetween('report_date', [$start, $end])
+        ->selectRaw('district_id, fillable_id, SUM(count) as total_count')
+        ->groupBy('district_id', 'fillable_id')
+        ->get()
+        ->groupBy('district_id');
+}
+
+/** Get first natural disaster entries (earliest record per district) */
+private function getFirstDisasterEntries(Carbon $start)
+{
+    return NaturalDisasterReport::withoutTrashed()
+        ->where('report_date', '>=', $start)
+        ->selectRaw('district_id, MIN(report_date) as first_date')
+        ->groupBy('district_id')
+        ->pluck('first_date', 'district_id');
+}
+
 
     /**
      * Edit a specific report

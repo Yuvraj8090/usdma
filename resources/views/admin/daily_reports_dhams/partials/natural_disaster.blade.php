@@ -1,20 +1,20 @@
 <div class="title-box" style="text-align:center; margin-bottom:10px;">
-    <h2 style="margin:0; font-size:12px;">
-        (चारधाम यात्रा से संबंधित सूचना-आंकड़े
-        विगत दिवस साँय: 07:00 बजे तक के हैं।)
-        <br>
-        <span style="font-size:10px; font-weight:normal;">
-            As latest update by the districts
-        </span>
-    </h2>
+    <h3 style="margin:0; font-size:12px;">Natural Disaster Report (Districtwise)</h3>
+    <h4 style="margin:2px 0; font-size:10px; font-weight:normal;">
+        as latest update by the districts
+    </h4>
+
+    <div class="summary-line" style="margin-top:4px; font-size:10px;">
+        Summary (Date {{ \Carbon\Carbon::parse($fromDate)->format('d-m-Y') }} to Till date)
+    </div>
 </div>
 
 <table class="report-table">
     <thead>
         <tr>
             <th>Sl. No.</th>
-            <th>धाम</th>
-            @foreach ($dhamParents as $parent)
+            <th>जिला</th>
+            @foreach ($disasterParents as $parent)
                 <th colspan="{{ $parent->children->count() }}">
                     {{ $parent->name }}
                 </th>
@@ -23,7 +23,7 @@
         <tr>
             <th></th>
             <th></th>
-            @foreach ($dhamParents as $parent)
+            @foreach ($disasterParents as $parent)
                 @foreach ($parent->children as $child)
                     <th>{{ $child->name }}</th>
                 @endforeach
@@ -33,26 +33,28 @@
 
     <tbody>
         @php
-            $sl = 1;
             $columnTotals = [];
+            $sl = 1;
         @endphp
 
-        @foreach ($dhams as $dham)
+        @foreach ($districts as $district)
             <tr>
                 <td>{{ $sl++ }}</td>
                 <td style="text-align:left;">
-                    {{ $dham->name }}
-                    @if (!empty($firstEntries[$dham->id]))
+                    {{ $district->name }}
+                    @if ($firstDisasterEntries->has($district->id))
                         <br>
-                        <small>({{ \Carbon\Carbon::parse($firstEntries[$dham->id])->translatedFormat('d-m-Y') }} से)</small>
+                        <small>First entry: {{ \Carbon\Carbon::parse($firstDisasterEntries[$district->id])->format('d-m-Y') }}</small>
                     @endif
                 </td>
 
-                @foreach ($dhamParents as $parent)
+                @foreach ($disasterParents as $parent)
                     @foreach ($parent->children as $child)
                         @php
-                            $key = $dham->id . '_' . $child->id;
-                            $count = $reports[$key]->total_count ?? 0;
+                            $districtReports = $disasterReports[$district->id] ?? collect();
+                            $report = $districtReports->firstWhere('fillable_id', $child->id);
+                            $count = $report->total_count ?? 0;
+
                             $columnTotals[$child->id] = ($columnTotals[$child->id] ?? 0) + $count;
                         @endphp
                         <td>{{ $count }}</td>
@@ -65,7 +67,7 @@
     <tfoot>
         <tr>
             <td colspan="2" style="font-weight:bold;">कुल योग (Total)</td>
-            @foreach ($dhamParents as $parent)
+            @foreach ($disasterParents as $parent)
                 @foreach ($parent->children as $child)
                     <td style="font-weight:bold;">{{ $columnTotals[$child->id] ?? 0 }}</td>
                 @endforeach

@@ -1,21 +1,21 @@
-<div class="title-box" style="text-align: center; margin-bottom:20px">
-    <h3>Natural Disaster Report (Districtwise)</h3>
-    <h4>as latest update by the districts</h4>
+<div class="title-box" style="text-align:center; margin-bottom:10px;">
+    <h3 style="margin:0; font-size:12px;">Road Accident Report (Districtwise)</h3>
+    <h4 style="margin:2px 0; font-size:10px; font-weight:normal;">
+        as latest update by the districts
+    </h4>
 
-    <div class="summary-line">
-        Summary (Date 
-        {{ \Carbon\Carbon::parse($fromDate)->format('d-m-Y') }}
-        to Till date )
+    <div class="summary-line" style="margin-top:4px; font-size:10px;">
+        Summary (Date {{ \Carbon\Carbon::parse($fromDate)->format('d-m-Y') }} to Till date)
     </div>
 </div>
 
-<table border="1" cellspacing="0" cellpadding="4" width="100%">
+<table class="report-table">
     <thead>
         <tr>
             <th>Sl. No.</th>
             <th>जिला</th>
             @foreach ($accidentalParents as $parent)
-                <th colspan="{{ $parent->children->count() }}" style="text-align:center">
+                <th colspan="{{ $parent->children->count() }}">
                     {{ $parent->name }}
                 </th>
             @endforeach
@@ -30,6 +30,7 @@
             @endforeach
         </tr>
     </thead>
+
     <tbody>
         @php
             $columnTotals = [];
@@ -38,14 +39,8 @@
 
         @foreach ($districts as $district)
             <tr>
-                <td style="text-align:center;">{{ $sl++ }}</td>
-                <td>
-                    {{ $district->name }}
-                    @if ($firstAccidentalEntries->has($district->id))
-                       
-                       
-                    @endif
-                </td>
+                <td>{{ $sl++ }}</td>
+                <td style="text-align:left;">{{ $district->name }}</td>
 
                 @foreach ($accidentalParents as $parent)
                     @foreach ($parent->children as $child)
@@ -53,15 +48,23 @@
                             $districtReports = $accidentalReports[$district->id] ?? collect();
                             $report = $districtReports->firstWhere('fillable_id', $child->id);
                             $count = $report->total_count ?? 0;
-
                             $columnTotals[$child->id] = ($columnTotals[$child->id] ?? 0) + $count;
                         @endphp
-                        <td style="text-align:center">{{ $count }}</td>
+                        <td>{{ $count }}</td>
                     @endforeach
                 @endforeach
             </tr>
         @endforeach
-
-       
     </tbody>
+
+    <tfoot>
+        <tr>
+            <td colspan="2" style="font-weight:bold;">कुल योग (Total)</td>
+            @foreach ($accidentalParents as $parent)
+                @foreach ($parent->children as $child)
+                    <td style="font-weight:bold;">{{ $columnTotals[$child->id] ?? 0 }}</td>
+                @endforeach
+            @endforeach
+        </tr>
+    </tfoot>
 </table>
