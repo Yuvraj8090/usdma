@@ -10,25 +10,32 @@ return new class extends Migration
     /**
      * Run the migrations.
      */
-    public function up(): void
-    {
-        Schema::table('equipments', function (Blueprint $table) {
-            // Drop old "type" column if it exists
-            if (Schema::hasColumn('equipments', 'type')) {
-                $table->dropColumn('type');
-            }
+   public function up(): void
+{
+    Schema::table('equipments', function (Blueprint $table) {
+        if (Schema::hasColumn('equipments', 'type')) {
+            $table->dropColumn('type');
+        }
 
-            // Only add category_id if it does NOT exist
-            if (!Schema::hasColumn('equipments', 'category_id')) {
-                $table->unsignedBigInteger('category_id')->after('name');
+        if (!Schema::hasColumn('equipments', 'category_id')) {
+            $table->unsignedBigInteger('category_id')->nullable()->after('name');
+        }
+    });
 
-                $table->foreign('category_id')
-                    ->references('id')
-                    ->on('equipment_categories')
-                    ->onDelete('cascade');
-            }
-        });
-    }
+    // Disable constraint check temporarily
+    DB::statement('SET FOREIGN_KEY_CHECKS=0;');
+
+    // Now safely add constraint
+    Schema::table('equipments', function (Blueprint $table) {
+        $table->foreign('category_id')
+            ->references('id')
+            ->on('equipment_categories')
+            ->onDelete('cascade');
+    });
+
+    DB::statement('SET FOREIGN_KEY_CHECKS=1;');
+}
+
 
     /**
      * Reverse the migrations.
