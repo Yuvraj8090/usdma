@@ -13,7 +13,7 @@
 
 <div class="w-full overflow-x-auto">
     <table id="{{ $id }}" class="min-w-full divide-y divide-gray-200 dark:divide-gray-700 text-center">
-        <thead class="bg-indigo-500 text-white">
+        <thead class="bg-indigo-500 text-white  ">
             <tr>
                 @foreach($headers as $header)
                     <th class="px-4 py-3 text-center text-sm font-semibold whitespace-nowrap uppercase tracking-wider">

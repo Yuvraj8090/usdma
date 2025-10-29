@@ -1,15 +1,19 @@
 <div class="title-box" style="text-align:center; margin-bottom:20px;">
-    <h2>🕉️ डेली रिपोर्ट्स (धाम्स)</h2>
-    <p>रिपोर्ट तिथि: {{ $reportDate ?? '-' }}</p>
+    <h2>
+        (चारधाम यात्रा से संबंधित सूचना-आंकड़े
+        विगत दिवस साँय: 07:00 बजे तक के हैं।)
+        <br>
+        <span class="eng">As latest update by the districts</span>
+    </h2>
 </div>
 
-<table border="1" cellspacing="0" cellpadding="4" width="100%">
+<table border="1" cellspacing="0" cellpadding="4" width="100%" style="border-collapse:collapse; text-align:center;">
     <thead>
         <tr>
             <th>Sl. No.</th>
             <th>धाम</th>
             @foreach ($dhamParents as $parent)
-                <th class="sub-header" colspan="{{ $parent->children->count() }}" style="text-align:center;">
+                <th class="sub-header" colspan="{{ $parent->children->count() }}">
                     {{ $parent->name }}
                 </th>
             @endforeach
@@ -19,11 +23,12 @@
             <th></th>
             @foreach ($dhamParents as $parent)
                 @foreach ($parent->children as $child)
-                    <th style="text-align:center;">{{ $child->name }}</th>
+                    <th>{{ $child->name }}</th>
                 @endforeach
             @endforeach
         </tr>
     </thead>
+
     <tbody>
         @php
             $sl = 1;
@@ -32,8 +37,8 @@
 
         @foreach ($dhams as $dham)
             <tr>
-                <td style="text-align:center;">{{ $sl++ }}</td>
-                <td>
+                <td>{{ $sl++ }}</td>
+                <td style="text-align:left;">
                     {{ $dham->name }}
                     @if (!empty($firstEntries[$dham->id]))
                         <br>
@@ -52,12 +57,21 @@
                             // Add to column totals
                             $columnTotals[$child->id] = ($columnTotals[$child->id] ?? 0) + $count;
                         @endphp
-                        <td style="text-align:center;">{{ $count }}</td>
+                        <td>{{ $count }}</td>
                     @endforeach
                 @endforeach
             </tr>
         @endforeach
-
-   
     </tbody>
+
+    <tfoot>
+        <tr style="font-weight:bold; background:#f2f2f2;">
+            <td colspan="2">कुल योग (Total)</td>
+            @foreach ($dhamParents as $parent)
+                @foreach ($parent->children as $child)
+                    <td>{{ $columnTotals[$child->id] ?? 0 }}</td>
+                @endforeach
+            @endforeach
+        </tr>
+    </tfoot>
 </table>

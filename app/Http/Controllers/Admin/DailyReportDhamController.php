@@ -3,14 +3,7 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
-use App\Models\{
-    DailyReportDham,
-    DailyReportsFillable,
-    Dham,
-    AccidentalReport,
-    AccidentalReportFillable,
-    District
-};
+use App\Models\{DailyReportDham, DailyReportsFillable, Dham, AccidentalReport, AccidentalReportFillable, District};
 use Illuminate\Http\Request;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Cache;
@@ -36,7 +29,7 @@ class DailyReportDhamController extends Controller
     {
         return view('admin.daily_reports_dhams.create', [
             'dhams' => $this->getDhams(),
-            'parents' => $this->getFillableParents()
+            'parents' => $this->getFillableParents(),
         ]);
     }
 
@@ -52,9 +45,7 @@ class DailyReportDhamController extends Controller
 
         $this->insertDhamReports($request->report_date, $request->reports);
 
-        return redirect()
-            ->route('admin.daily_reports_dhams.index')
-            ->with('success', 'Daily reports for Dhams added successfully.');
+        return redirect()->route('admin.daily_reports_dhams.index')->with('success', 'Daily reports for Dhams added successfully.');
     }
 
     /**
@@ -78,23 +69,9 @@ class DailyReportDhamController extends Controller
         [$financialYearStart, $latestAccidentalDate] = $this->getAccidentalDateRange($year);
         $accidentalReports = $this->getAccidentalReports($financialYearStart, $latestAccidentalDate);
         $firstAccidentalEntries = $this->getFirstAccidentalEntries($financialYearStart);
-$fromDate = Carbon::parse($request->get('report_date'))->copy()->startOfMonth();
-$toDate = Carbon::parse($request->get('report_date'));
-        return view('admin.daily_reports_dhams.pdf', compact(
-            'reportDate',
-            'financialYearStart',
-            'latestAccidentalDate',
-            'dhamReports',
-            'dhams',
-            'fromDate',
-    'toDate',
-            'dhamParents',
-            'firstDhamEntries',
-            'accidentalReports',
-            'districts',
-            'accidentalParents',
-            'firstAccidentalEntries'
-        ));
+        $fromDate = Carbon::parse($request->get('report_date'))->copy()->startOfMonth();
+        $toDate = Carbon::parse($request->get('report_date'));
+        return view('admin.daily_reports_dhams.pdf', compact('reportDate', 'financialYearStart', 'latestAccidentalDate', 'dhamReports', 'dhams', 'fromDate', 'toDate', 'dhamParents', 'firstDhamEntries', 'accidentalReports', 'districts', 'accidentalParents', 'firstAccidentalEntries'));
     }
 
     /**
@@ -154,11 +131,26 @@ $toDate = Carbon::parse($request->get('report_date'));
      * ====================================================== */
 
     /** Cached data accessors (5 min cache to reduce DB hits) */
-    private function getDhams()       { return Cache::remember('dhams', 300, fn() => Dham::withoutTrashed()->get()); }
-    private function getFillables()   { return Cache::remember('fillables', 300, fn() => DailyReportsFillable::withoutTrashed()->get()); }
-    private function getFillableParents() { return Cache::remember('fillable_parents', 300, fn() => DailyReportsFillable::with('children')->whereNull('parent_id')->withoutTrashed()->get()); }
-    private function getDistricts()   { return Cache::remember('districts', 300, fn() => District::withoutTrashed()->get()); }
-    private function getAccidentalParents() { return Cache::remember('accidental_parents', 300, fn() => AccidentalReportFillable::with('children')->whereNull('parent_id')->withoutTrashed()->get()); }
+    private function getDhams()
+    {
+        return Cache::remember('dhams', 300, fn() => Dham::withoutTrashed()->get());
+    }
+    private function getFillables()
+    {
+        return Cache::remember('fillables', 300, fn() => DailyReportsFillable::withoutTrashed()->get());
+    }
+    private function getFillableParents()
+    {
+        return Cache::remember('fillable_parents', 300, fn() => DailyReportsFillable::with('children')->whereNull('parent_id')->withoutTrashed()->get());
+    }
+    private function getDistricts()
+    {
+        return Cache::remember('districts', 300, fn() => District::withoutTrashed()->get());
+    }
+    private function getAccidentalParents()
+    {
+        return Cache::remember('accidental_parents', 300, fn() => AccidentalReportFillable::with('children')->whereNull('parent_id')->withoutTrashed()->get());
+    }
 
     /** Insert new dham reports efficiently */
     private function insertDhamReports(string $reportDate, array $reports): void
@@ -189,21 +181,13 @@ $toDate = Carbon::parse($request->get('report_date'));
     /** Get Dham reports for a given date */
     private function getDhamReports(Carbon $reportDate)
     {
-        return DailyReportDham::withoutTrashed()
-            ->selectRaw('dham_id, fillable_id, SUM(count) as total_count')
-            ->whereDate('report_date', $reportDate)
-            ->groupBy('dham_id', 'fillable_id')
-            ->get()
-            ->keyBy(fn($r) => $r->dham_id . '_' . $r->fillable_id);
+        return DailyReportDham::withoutTrashed()->selectRaw('dham_id, fillable_id, SUM(count) as total_count')->whereDate('report_date', $reportDate)->groupBy('dham_id', 'fillable_id')->get()->keyBy(fn($r) => $r->dham_id . '_' . $r->fillable_id);
     }
 
     /** Get first report per Dham */
     private function getFirstDhamEntries()
     {
-        return DailyReportDham::withoutTrashed()
-            ->selectRaw('dham_id, MIN(report_date) as first_date')
-            ->groupBy('dham_id')
-            ->pluck('first_date', 'dham_id');
+        return DailyReportDham::withoutTrashed()->selectRaw('dham_id, MIN(report_date) as first_date')->groupBy('dham_id')->pluck('first_date', 'dham_id');
     }
 
     /** Get date and year info */
@@ -225,7 +209,9 @@ $toDate = Carbon::parse($request->get('report_date'));
     /** Get accidental reports */
     private function getAccidentalReports(Carbon $start, ?string $end)
     {
-        if (!$end) return collect();
+        if (!$end) {
+            return collect();
+        }
 
         return AccidentalReport::withoutTrashed()
             ->whereBetween('report_date', [$start, $end])
@@ -238,11 +224,7 @@ $toDate = Carbon::parse($request->get('report_date'));
     /** Get first accidental entries */
     private function getFirstAccidentalEntries(Carbon $start)
     {
-        return AccidentalReport::withoutTrashed()
-            ->where('report_date', '>=', $start)
-            ->selectRaw('district_id, MIN(report_date) as first_date')
-            ->groupBy('district_id')
-            ->pluck('first_date', 'district_id');
+        return AccidentalReport::withoutTrashed()->where('report_date', '>=', $start)->selectRaw('district_id, MIN(report_date) as first_date')->groupBy('district_id')->pluck('first_date', 'district_id');
     }
 
     /** Apply filters for listing */
@@ -256,8 +238,6 @@ $toDate = Carbon::parse($request->get('report_date'));
             }
         }
 
-        return $paginate
-            ? $query->latest('report_date')->paginate(15)
-            : $query->latest('report_date')->get();
+        return $paginate ? $query->latest('report_date')->paginate(15) : $query->latest('report_date')->get();
     }
 }

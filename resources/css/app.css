@@ -71,3 +71,7 @@
 .dark .dataTables_wrapper .dataTables_paginate .dt-paging-button.current {
     @apply bg-indigo-500 text-white border-indigo-500;
 }
+    table.dataTable thead th, table.dataTable thead td, table.dataTable tfoot th, table.dataTable tfoot td {
+    text-align: center !important;
+    vertical-align: var(--dt-header-vertical-align);
+}

@@ -60,6 +60,12 @@ Route::middleware(['auth:sanctum', config('jetstream.auth_session'), 'verified']
         Route::resource('relief_material', ReliefMaterialController::class);
         Route::resource('seasons', SeasonController::class);
 
+    Route::resource('natural-disaster-reports', App\Http\Controllers\Admin\NaturalDisasterReportController::class);
+
+Route::resource('natural-disaster-fillable', App\Http\Controllers\Admin\NaturalDisasterReportsFillableController::class)
+    ->names('natural-disaster-fillable')
+    ->parameters(['natural-disaster-fillable' => 'fillable']);
+
             Route::resource('manpower', ManpowerController::class);
 
             Route::resource('district-users', DistrictUserController::class);
