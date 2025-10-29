@@ -9,6 +9,8 @@ use App\Http\Controllers\Admin\DistrictUserController;
 use App\Http\Controllers\Admin\DailyReportDhamController;
 use App\Http\Controllers\Admin\DailyReportsFillableController;
 use App\Http\Controllers\Admin\DailyReportFileController;
+use App\Http\Controllers\Admin\RoadClosedFillableController;
+use App\Http\Controllers\Admin\RoadClosedReportController;
 use App\Http\Controllers\Admin\DailyReportController;
 use App\Http\Controllers\Admin\DistrictController;
 use App\Http\Controllers\Admin\DistrictReportController;
@@ -52,23 +54,42 @@ Route::middleware(['auth:sanctum', config('jetstream.auth_session'), 'verified']
         Route::post('/reports', [DailyReportFileController::class, 'store'])->name('admin.reports.store');
     });
 
-    
     // Admin routes group
     Route::prefix('admin')
-    ->name('admin.')
-    ->group(function () {
-        Route::resource('relief_material', ReliefMaterialController::class);
-        Route::resource('seasons', SeasonController::class);
+        ->name('admin.')
+        ->group(function () {
+            Route::resource('relief_material', ReliefMaterialController::class);
+            Route::resource('seasons', SeasonController::class);
 
-    Route::resource('natural-disaster-reports', App\Http\Controllers\Admin\NaturalDisasterReportController::class);
+            Route::resource('natural-disaster-reports', App\Http\Controllers\Admin\NaturalDisasterReportController::class);
 
-Route::resource('natural-disaster-fillable', App\Http\Controllers\Admin\NaturalDisasterReportsFillableController::class)
-    ->names('natural-disaster-fillable')
-    ->parameters(['natural-disaster-fillable' => 'fillable']);
+            Route::resource('natural-disaster-fillable', App\Http\Controllers\Admin\NaturalDisasterReportsFillableController::class)
+                ->names('natural-disaster-fillable')
+                ->parameters(['natural-disaster-fillable' => 'fillable']);
 
             Route::resource('manpower', ManpowerController::class);
 
             Route::resource('district-users', DistrictUserController::class);
+
+            // ================== 🛣️ Road Closed Fillable (Category Master) ==================
+            Route::resource('road-closed-fillable', RoadClosedFillableController::class)->names([
+                'index' => 'road-closed-fillable.index',
+                'create' => 'road-closed-fillable.create',
+                'store' => 'road-closed-fillable.store',
+                'edit' => 'road-closed-fillable.edit',
+                'update' => 'road-closed-fillable.update',
+                'destroy' => 'road-closed-fillable.destroy',
+            ]);
+
+            // ================== 🚧 Road Closed Reports ==================
+            Route::resource('road-closed-reports', RoadClosedReportController::class)->names([
+                'index' => 'road-closed-reports.index',
+                'create' => 'road-closed-reports.create',
+                'store' => 'road-closed-reports.store',
+                'edit' => 'road-closed-reports.edit',
+                'update' => 'road-closed-reports.update',
+                'destroy' => 'road-closed-reports.destroy',
+            ]);
 
             Route::resource('deployments', DeploymentController::class);
 
