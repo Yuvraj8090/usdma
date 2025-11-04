@@ -15,16 +15,7 @@ class Dham extends Model
     /**
      * The attributes that are mass assignable.
      */
-    protected $fillable = [
-        'name',
-        'state_id',
-        'district_id',
-        'is_active',
-        'is_winter',
-        'latitude',
-        'longitude',
-        'height',
-    ];
+    protected $fillable = ['name', 'state_id', 'district_id', 'is_active', 'is_winter', 'latitude', 'longitude', 'height'];
 
     /**
      * The attributes that should be cast.
@@ -32,9 +23,9 @@ class Dham extends Model
     protected $casts = [
         'is_active' => 'boolean',
         'is_winter' => 'boolean',
-        'latitude'  => 'decimal:7',
+        'latitude' => 'decimal:7',
         'longitude' => 'decimal:7',
-        'height'    => 'integer',
+        'height' => 'integer',
     ];
 
     /**
@@ -48,5 +39,9 @@ class Dham extends Model
     public function district()
     {
         return $this->belongsTo(District::class, 'district_id');
+    }
+    public function touristVisitorDetails()
+    {
+        return $this->hasMany(TouristVisitorDetail::class, 'location_id');
     }
 }

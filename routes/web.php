@@ -21,6 +21,7 @@ use App\Http\Controllers\Admin\AccidentalReportFillableController;
 use App\Http\Controllers\Admin\DhamController;
 use App\Http\Controllers\Admin\MeetingController;
 use App\Http\Controllers\EquipmentController;
+use Illuminate\Support\Facades\Auth;
 use App\Http\Controllers\ManpowerController;
 use App\Http\Controllers\ReliefMaterialController;
 use App\Http\Controllers\DeploymentController;
@@ -37,14 +38,15 @@ Route::get('/{lang}', [PageController::class, 'showWelcomePage'])
     ->name('welcome.localized');
 Route::get('/', [PageController::class, 'showWelcomePage'])->name('welcome');
 Route::get('/admin', function () {
-    if (Auth::check()) {
-        return redirect()->route('dashboard'); // Adjust this route name as needed
-    }
-    return redirect()->route('login'); // Adjust this route name as needed
+    return Auth::check()
+        ? redirect()->route('dashboard')
+        : redirect()->route('login');
 });
 Route::middleware(['auth:sanctum', config('jetstream.auth_session'), 'verified'])->group(function () {
     Route::post('/admin/clear-cache', [PageController::class, 'clearCache'])->name('admin.clear.cache');
     Route::get('admin/daily-reports-dhams/pdf', [DailyReportDhamController::class, 'downloadPdf'])->name('admin.daily_reports_dhams.pdf');
+  Route::resource('tourist-visitor-details', App\Http\Controllers\Admin\TouristVisitorDetailController::class);
+
 
     // Dashboard route
     Route::get('/admin/dashboard', [AnalyticsController::class, 'index'])->name('dashboard');
