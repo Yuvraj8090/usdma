@@ -45,7 +45,6 @@ Route::get('/admin', function () {
 Route::middleware(['auth:sanctum', config('jetstream.auth_session'), 'verified'])->group(function () {
     Route::post('/admin/clear-cache', [PageController::class, 'clearCache'])->name('admin.clear.cache');
     Route::get('admin/daily-reports-dhams/pdf', [DailyReportDhamController::class, 'downloadPdf'])->name('admin.daily_reports_dhams.pdf');
-  Route::resource('tourist-visitor-details', App\Http\Controllers\Admin\TouristVisitorDetailController::class);
 
 
     // Dashboard route
@@ -60,6 +59,8 @@ Route::middleware(['auth:sanctum', config('jetstream.auth_session'), 'verified']
     Route::prefix('admin')
         ->name('admin.')
         ->group(function () {
+              Route::resource('tourist-visitor-details', App\Http\Controllers\Admin\TouristVisitorDetailController::class);
+
             Route::resource('relief_material', ReliefMaterialController::class);
             Route::resource('seasons', SeasonController::class);
 
