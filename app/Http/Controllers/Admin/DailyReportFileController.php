@@ -9,20 +9,26 @@ use Illuminate\Http\Request;
 class DailyReportFileController extends Controller
 {
     public function index()
-    {
-        $files = DailyReportFile::all();
+{
+    $files = DailyReportFile::all();
 
-        // Convert to events for calendar
-        $events = $files->map(function ($file) {
-            return [
-                'title' => basename($file->file_path),
-                'start' => $file->submit_date->format('Y-m-d H:i:s'),
-                'url'   => asset('storage/' . $file->file_path),
-            ];
-        });
+    $events = $files->map(function ($file) {
+        return [
+            'title' => $file->report_type == 1 ? 'Morning' : 'Evening',
+            'start' => $file->submit_date->format('Y-m-d'),
+            'url'   => asset('storage/' . $file->file_path),
 
-        return view('admin.daily_report_files.index', compact('events'));
-    }
+            // COLORS
+            'color' => $file->report_type == 1 ? '#2563eb' : '#f97316', // Blue / Orange
+
+            // Sorting
+            'report_type' => $file->report_type,
+        ];
+    });
+
+    return view('admin.daily_report_files.index', compact('events'));
+}
+
 
     public function store(Request $request)
     {

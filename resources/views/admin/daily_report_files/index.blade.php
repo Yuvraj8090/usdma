@@ -15,14 +15,13 @@
         @if($last)
             <div class="mb-4 px-4 py-3 bg-blue-100 text-blue-800 rounded-lg shadow">
                 <strong>Last Uploaded Report:</strong>
-                {{ $last->submit_date->format('d M Y, h:i A') }}  
+                {{ $last->submit_date->format('d M Y, h:i A') }}
                 ({{ $last->report_type == 1 ? 'Morning' : 'Evening' }})
             </div>
         @endif
 
         {{-- Upload Form --}}
         <div class="bg-white dark:bg-gray-800 p-6 rounded-xl shadow-lg border border-gray-200 dark:border-gray-700 mb-6">
-
             @if(session('success'))
                 <div class="mb-4 px-4 py-2 bg-green-200 text-green-800 rounded">
                     {{ session('success') }}
@@ -74,19 +73,20 @@
 
     <script>
         document.addEventListener('DOMContentLoaded', function () {
+
             var calendarEl = document.getElementById('calendar');
 
             var calendar = new FullCalendar.Calendar(calendarEl, {
                 initialView: 'dayGridMonth',
                 height: 600,
                 events: @json($events),
+                eventOrder: 'extendedProps.report_type', // Morning first
                 eventClick: function(info) {
                     if (info.event.url) {
                         window.open(info.event.url, '_blank');
                         info.jsEvent.preventDefault();
                     }
                 },
-                eventOrder: "extendedProps.report_type", // Morning before Evening
                 headerToolbar: {
                     left: 'prev,next today',
                     center: 'title',
