@@ -16,7 +16,7 @@ class DailyReportFileController extends Controller
         return [
             'title' => $file->report_type == 1 ? 'Morning' : 'Evening',
             'start' => $file->submit_date->format('Y-m-d'),
-            'url'   => asset('storage/' . $file->file_path),
+            'url'   => asset('storage/app/public/' . $file->file_path),
 
             // COLORS
             'color' => $file->report_type == 1 ? '#2563eb' : '#f97316', // Blue / Orange
