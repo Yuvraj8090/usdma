@@ -27,16 +27,23 @@ class DailyReportFileController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            'file' => 'required|file|mimes:pdf,doc,docx,xlsx,jpg,png',
+            'file'        => 'required|file|mimes:pdf,doc,docx,xlsx,jpg,png',
             'submit_date' => 'required|date',
             'submit_time' => 'required',
+            'report_type' => 'required|integer|in:1,2', // 1 = Morning, 2 = Evening
         ]);
 
+        // Store file
         $path = $request->file('file')->store('daily_reports', 'public');
 
+        // Combine date + time
+        $submitDateTime = $request->submit_date . ' ' . $request->submit_time;
+
+        // Create record
         DailyReportFile::create([
             'file_path'   => $path,
-            'submit_date' => $request->submit_date . ' ' . $request->submit_time,
+            'submit_date' => $submitDateTime,
+            'report_type' => $request->report_type, // store morning/evening
         ]);
 
         return back()->with('success', 'Report uploaded successfully!');

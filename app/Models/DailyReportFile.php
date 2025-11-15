@@ -13,10 +13,11 @@ class DailyReportFile extends Model
     protected $fillable = [
         'file_path',
         'submit_date',
+        'report_type', // 1 = Morning, 2 = Evening
     ];
 
-    // 🔹 Cast submit_date to Carbon instance
     protected $casts = [
-        'submit_date' => 'datetime',
+        'submit_date' => 'date', // or 'datetime'
+        'report_type' => 'integer',
     ];
 }
