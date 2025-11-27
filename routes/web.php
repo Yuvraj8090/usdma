@@ -25,7 +25,7 @@ use App\Http\Controllers\EquipmentController;
 use Illuminate\Support\Facades\Auth;
 use App\Http\Controllers\ManpowerController;
 use App\Http\Controllers\Admin\TehsilController;
-
+use App\Http\Controllers\Admin\IncidentTypeController;
 use App\Http\Controllers\ReliefMaterialController;
 use App\Http\Controllers\DeploymentController;
 use App\Http\Controllers\Admin\EquipmentCategoryController;
@@ -59,6 +59,8 @@ Route::middleware(['auth:sanctum', config('jetstream.auth_session'), 'verified']
     Route::prefix('admin')
         ->name('admin.')
         ->group(function () {
+            Route::resource('incident-types', IncidentTypeController::class);
+
             Route::resource('tourist-visitor-details', App\Http\Controllers\Admin\TouristVisitorDetailController::class);
 
             Route::resource('villages', VillageController::class);
