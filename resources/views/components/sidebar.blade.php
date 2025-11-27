@@ -71,7 +71,7 @@
                 </x-sidebar.dropdown>
 
                 {{-- 🗺️ Locations --}}
-                <x-sidebar.dropdown icon="fas fa-map-marker-alt" label="Locations"
+                <x-sidebar.dropdown icon="fas fa-map-marker-alt" label="Masters"
                     :active="request()->routeIs('admin.states.*') || request()->routeIs('admin.districts.*') || request()->routeIs('admin.dhams.*')">
                     <x-sidebar.link route="admin.states.index" label="States" icon="fas fa-flag"
                         :active="request()->routeIs('admin.states.*')" />
