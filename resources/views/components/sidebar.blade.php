@@ -80,6 +80,8 @@
                 </x-sidebar.dropdown>
                 <x-sidebar.link route="admin.incident-types.index" label="Incident-Types" icon="fas fa-flag"
                     :active="request()->routeIs('admin.incident-types.*')" />
+                <x-sidebar.link route="admin.disaster-types.index" label="Disaster-Types" icon="fas fa-flag"
+                    :active="request()->routeIs('admin.disaster-types.*')" />
                 {{-- 📅 Meetings --}}
                 <x-sidebar.link route="admin.meetings.index" label="Meetings" icon="fas fa-calendar-alt"
                     :active="request()->routeIs('admin.meetings.*')" />

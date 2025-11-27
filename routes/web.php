@@ -30,6 +30,7 @@ use App\Http\Controllers\ReliefMaterialController;
 use App\Http\Controllers\DeploymentController;
 use App\Http\Controllers\Admin\EquipmentCategoryController;
 use App\Http\Controllers\Admin\SeasonController;
+use App\Http\Controllers\Admin\DisasterTypeController;
 
 Route::get('/en/{slug}', [PageController::class, 'showPage'])->name('page.show');
 Route::get('/hi/{slug}', [PageController::class, 'showPageHi'])->name('page.show.hi');
@@ -59,6 +60,8 @@ Route::middleware(['auth:sanctum', config('jetstream.auth_session'), 'verified']
     Route::prefix('admin')
         ->name('admin.')
         ->group(function () {
+            Route::resource('disaster-types', DisasterTypeController::class);
+
             Route::resource('incident-types', IncidentTypeController::class);
 
             Route::resource('tourist-visitor-details', App\Http\Controllers\Admin\TouristVisitorDetailController::class);
