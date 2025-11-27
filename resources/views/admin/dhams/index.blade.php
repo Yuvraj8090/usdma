@@ -44,6 +44,7 @@
                             <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Latitude</th>
                             <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Longitude</th>
                             <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Height</th>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Winter</th>
                             <th class="px-6 py-3 text-right text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Actions</th>
                         </tr>
                     </thead>
@@ -54,6 +55,10 @@
                                 <td class="px-6 py-4 text-sm text-gray-700 dark:text-gray-400">{{ $dham->latitude ?? '-' }}</td>
                                 <td class="px-6 py-4 text-sm text-gray-700 dark:text-gray-400">{{ $dham->longitude ?? '-' }}</td>
                                 <td class="px-6 py-4 text-sm text-gray-700 dark:text-gray-400">{{ $dham->height ?? '-' }}</td>
+                                <td class="px-6 py-4 text-sm text-gray-700 dark:text-gray-400">
+    {{ $dham->is_winter == 1 ? 'Yes' : 'No' }}
+</td>
+
 
                                 <td class="px-6 py-4 text-right text-sm font-medium space-x-2">
                                     <a href="{{ route('admin.dhams.edit', $dham->id) }}"

@@ -13,6 +13,7 @@ use App\Http\Controllers\Admin\RoadClosedFillableController;
 use App\Http\Controllers\Admin\RoadClosedReportController;
 use App\Http\Controllers\Admin\DailyReportController;
 use App\Http\Controllers\Admin\DistrictController;
+use App\Http\Controllers\Admin\VillageController;
 use App\Http\Controllers\Admin\DistrictReportController;
 use App\Http\Controllers\NavbarItemController;
 use App\Http\Controllers\PageController;
@@ -23,6 +24,8 @@ use App\Http\Controllers\Admin\MeetingController;
 use App\Http\Controllers\EquipmentController;
 use Illuminate\Support\Facades\Auth;
 use App\Http\Controllers\ManpowerController;
+use App\Http\Controllers\Admin\TehsilController;
+
 use App\Http\Controllers\ReliefMaterialController;
 use App\Http\Controllers\DeploymentController;
 use App\Http\Controllers\Admin\EquipmentCategoryController;
@@ -38,14 +41,11 @@ Route::get('/{lang}', [PageController::class, 'showWelcomePage'])
     ->name('welcome.localized');
 Route::get('/', [PageController::class, 'showWelcomePage'])->name('welcome');
 Route::get('/admin', function () {
-    return Auth::check()
-        ? redirect()->route('dashboard')
-        : redirect()->route('login');
+    return Auth::check() ? redirect()->route('dashboard') : redirect()->route('login');
 });
 Route::middleware(['auth:sanctum', config('jetstream.auth_session'), 'verified'])->group(function () {
     Route::post('/admin/clear-cache', [PageController::class, 'clearCache'])->name('admin.clear.cache');
     Route::get('admin/daily-reports-dhams/pdf', [DailyReportDhamController::class, 'downloadPdf'])->name('admin.daily_reports_dhams.pdf');
-
 
     // Dashboard route
     Route::get('/admin/dashboard', [AnalyticsController::class, 'index'])->name('dashboard');
@@ -59,7 +59,11 @@ Route::middleware(['auth:sanctum', config('jetstream.auth_session'), 'verified']
     Route::prefix('admin')
         ->name('admin.')
         ->group(function () {
-              Route::resource('tourist-visitor-details', App\Http\Controllers\Admin\TouristVisitorDetailController::class);
+            Route::resource('tourist-visitor-details', App\Http\Controllers\Admin\TouristVisitorDetailController::class);
+
+            Route::resource('villages', VillageController::class);
+
+            Route::resource('tehsils', TehsilController::class);
 
             Route::resource('relief_material', ReliefMaterialController::class);
             Route::resource('seasons', SeasonController::class);

@@ -79,6 +79,8 @@
                         :active="request()->routeIs('admin.districts.*')" />
                     <x-sidebar.link route="admin.dhams.index" label="Dhams" icon="fas fa-place-of-worship"
                         :active="request()->routeIs('admin.dhams.*')" />
+                        <x-sidebar.link route="admin.tehsils.index" label="Tehsils" icon="fas fa-place-of-worship"
+                        :active="request()->routeIs('admin.tehsils.*')" />
                 </x-sidebar.dropdown>
 
                 {{-- 📅 Meetings --}}
