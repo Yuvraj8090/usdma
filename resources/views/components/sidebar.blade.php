@@ -90,7 +90,7 @@
             <x-sidebar.link route="admin.dhams.index" label="Dhams" icon="fas fa-place-of-worship" :active="request()->routeIs('admin.dhams.*')" />
             <x-sidebar.link route="admin.tehsils.index" label="Tehsils" icon="fas fa-map" :active="request()->routeIs('admin.tehsils.*')" />
             <x-sidebar.link route="admin.villages.index" label="Villages" icon="fas fa-home" :active="request()->routeIs('admin.villages.*')" />
-            <x-sidebar.link route="admin.incidents.index" label="Incidents" icon="fas fa-bolt" :active="request()->routeIs('admin.incidents.*')" />
+            <x-sidebar.link route="admin.incidents.index" label="Add Incidents" icon="fas fa-bolt" :active="request()->routeIs('admin.incidents.*')" />
             <x-sidebar.link route="admin.tourist-visitor-details.index" label="Tourist Visitors" icon="fas fa-users" :active="request()->routeIs('admin.tourist-visitor-details.*')" />
             <x-sidebar.link route="admin.seasons.index" label="Seasons" icon="fas fa-cloud-sun" :active="request()->routeIs('admin.seasons.*')" />
 
