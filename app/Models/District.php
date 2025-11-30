@@ -13,11 +13,7 @@ class District extends Model
 
     protected $table = 'districts';
 
-    protected $fillable = [
-        'name',
-        'state_id',
-        'is_active',
-    ];
+    protected $fillable = ['name', 'state_id', 'is_active'];
 
     protected $casts = [
         'is_active' => 'boolean',

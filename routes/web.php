@@ -60,6 +60,8 @@ Route::middleware(['auth:sanctum', config('jetstream.auth_session'), 'verified']
     Route::prefix('admin')
         ->name('admin.')
         ->group(function () {
+   Route::resource('incidents', \App\Http\Controllers\Admin\IncidentController::class);
+
             Route::resource('disaster-types', DisasterTypeController::class);
 
             Route::resource('incident-types', IncidentTypeController::class);
