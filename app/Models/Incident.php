@@ -7,43 +7,19 @@ use Illuminate\Database\Eloquent\Model;
 class Incident extends Model
 {
     protected $fillable = [
-        'incident_type',
-        'name',
-        'gender',
-        'age',
-        'date',
-        'time',
+        'incident_uid',
+        'incident_name',
+        'steps',
+        'incident_through',
         'state',
-        'address',
-        'loss_details',
-        'reason',
+        'district',
+        'village',
+        'latitude',
+        'longitude',
+        'incident_date',
+        'incident_time',
+        'big_animals_died',
+        'small_animals_died',
+        'file_path',
     ];
-
-    protected $casts = [
-        'loss_details' => 'array',
-        'date' => 'date',
-        'time' => 'datetime:H:i',
-    ];
-
-    // ---- RELATIONSHIPS ---- //
-
-    public function nominee()
-    {
-        return $this->hasOne(Nominee::class);
-    }
-
-    public function compensation()
-    {
-        return $this->hasOne(Compensation::class);
-    }
-
-    public function animalLoss()
-    {
-        return $this->hasOne(AnimalLoss::class);
-    }
-
-    public function propertyLosses()
-    {
-        return $this->hasMany(PropertyLoss::class);
-    }
 }
