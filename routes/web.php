@@ -28,6 +28,7 @@ use App\Http\Controllers\Admin\TehsilController;
 use App\Http\Controllers\Admin\IncidentTypeController;
 use App\Http\Controllers\ReliefMaterialController;
 use App\Http\Controllers\DeploymentController;
+use App\Http\Controllers\HumanLossController;
 use App\Http\Controllers\Admin\EquipmentCategoryController;
 use App\Http\Controllers\Admin\SeasonController;
 use App\Http\Controllers\Admin\DisasterTypeController;
@@ -144,6 +145,33 @@ Route::middleware(['auth:sanctum', config('jetstream.auth_session'), 'verified']
             Route::get('/pages/edit/{id}', [PageController::class, 'showEditForm'])->name('pages.edit.form');
             Route::put('/pages/edit/{id}', [PageController::class, 'updatePage'])->name('pages.update');
             Route::post('/pages/delete/{id}', [PageController::class, 'deletePage'])->name('pages.delete');
+
+
+Route::get('/incidents/{incident}/human-loss/create', [HumanLossController::class, 'create'])->name('human_loss.create');
+Route::post('/incidents/{incident}/human-loss/store', [HumanLossController::class, 'store'])->name('human_loss.store');
+// routes/web.php
+Route::get('human-loss/nominee-row', [HumanLossController::class, 'nomineeRow'])
+    ->name('human_loss.nominee_row');
+ 
+Route::prefix('human-loss')->name('human_loss.')->group(function () {
+
+
+    // Show edit form for a Human Loss record
+    Route::get('/{humanLoss}/edit', [HumanLossController::class, 'edit'])->name('edit');
+
+    // Update a Human Loss record
+    Route::put('/{humanLoss}', [HumanLossController::class, 'update'])->name('update');
+
+});
+Route::get('/get-districts/{state}', function ($stateId) {
+    return \App\Models\District::where('state_id', $stateId)
+        ->where('is_active', true)
+        ->orderBy('name')
+        ->get(['id', 'name']);
+})->name('get.districts');
+
+
+
 
             // CRUD routes for Roles and Users under /admin
             Route::resource('roles', RoleController::class);

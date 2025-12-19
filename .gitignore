@@ -1,8 +1,17 @@
+# Logs
 *.log
+php_errors.log
+
+# OS Files
 .DS_Store
+Thumbs.db
+
+# Environment Files
 .env
 .env.backup
 .env.production
+
+# IDE / Editor Files
 .phpactor.json
 .phpunit.result.cache
 /.fleet
@@ -11,15 +20,31 @@
 /.phpunit.cache
 /.vscode
 /.zed
-/auth.json
+
+# Auth / Keys
+auth.json
+
+# Node
 /node_modules
+package-lock.json
 
-/public/hot
+# Vendor
+/vendor
 
+# Laravel Storage (but NOT removing your request)
+# If you want full storage ignored, uncomment:
+# /storage
 /storage/*.key
 /storage/pail
-/vendor
+
+# Build system (per your request these lines are removed)
+build/
+storage/
+storage.zip
+
+# Vite Hot Reload
+/public/hot
+
+# Homestead
 Homestead.json
 Homestead.yaml
-Thumbs.db
-package-lock.json

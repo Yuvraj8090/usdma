@@ -22,6 +22,7 @@ class HumanLoss extends Model
     ];
 
     protected $casts = [
-        'nominee' => 'array',
+        'nominee' => 'array', // <-- ensures $hl->nominee is always an array
+        'compensation_received_date' => 'date',
     ];
 }
