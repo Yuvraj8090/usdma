@@ -1,4 +1,9 @@
 @import "@fortawesome/fontawesome-free/css/all.min.css";
+@import "https://cdn.datatables.net/1.13.6/css/jquery.dataTables.min.css";
+@import "https://cdn.datatables.net/responsive/2.5.0/css/responsive.dataTables.min.css";
+@import "https://code.jquery.com/jquery-3.7.1.min.js";
+@import "https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js";
+@import "https://cdn.datatables.net/responsive/2.5.0/js/dataTables.responsive.min.js";
 
 @tailwind base;
 @tailwind components;
@@ -10,7 +15,21 @@ display: none;
 .form-label {
 @apply text-gray-700 dark:text-gray-300 font-medium;
 }
-
+table.dataTable thead th {
+      @apply bg-gray-50 text-gray-500 text-xs uppercase tracking-wider;
+    }
+    table.dataTable tbody td {
+      @apply text-sm text-gray-900;
+    }
+    .dataTables_wrapper .dataTables_paginate .paginate_button {
+      @apply px-3 py-1 rounded bg-gray-100 text-gray-700 hover:bg-gray-200;
+    }
+    .dataTables_wrapper .dataTables_filter input {
+      @apply px-2 py-1 border border-gray-300 rounded;
+    }
+    .dataTables_wrapper .dataTables_length select {
+      @apply px-2 py-1 border border-gray-300 rounded;
+    }
 .input-custom {
 @apply w-full px-4 py-3
 border border-gray-300 dark:border-gray-700

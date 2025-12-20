@@ -13,7 +13,7 @@
                     </h2>
 
                     <a href="{{ route('admin.incidents.create') }}"
-                        class="px-4 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 flex items-center gap-2">
+                        class="px-4 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 flex items-center gap-2 transition">
                         <i class="fas fa-plus"></i> Add Incident
                     </a>
                 </div>
@@ -24,73 +24,80 @@
                         <i class="fas fa-check-circle"></i> {{ session('success') }}
                     </div>
                 @endif
+
+                <!-- Table -->
                 <div class="p-6 overflow-x-auto">
-    <table id="incidents-table" class="min-w-full">
-        <thead>
-            <tr>
-                <th>Type</th>
-                <th>Incident Name</th>
-                <th>Date</th>
-                <th>State</th>
-
-                <th>Big Animals Died</th>
-                <th>Small Animals Died</th>
-
-                <th>Partially House</th>
-                <th>Severely House</th>
-                <th>Fully House</th>
-                <th>Cowshed Damaged</th>
-
-                <th>Human Died</th>
-                <th>Human Missing</th>
-                <th>Human Injured</th>
-
-                <th>Actions</th>
-            </tr>
-        </thead>
-    </table>
-</div>
-
-
+                    <table id="incidents-table" class="min-w-full divide-y divide-gray-200 dark:divide-gray-700 table-auto border border-gray-300 dark:border-gray-600">
+                        <thead class="bg-gray-50 dark:bg-gray-700">
+                            <tr class="text-gray-700 dark:text-gray-200 text-left text-sm font-semibold">
+                                <th class="px-4 py-2 border-b border-gray-200 dark:border-gray-600">Type</th>
+                                <th class="px-4 py-2 border-b border-gray-200 dark:border-gray-600">Incident Name</th>
+                                <th class="px-4 py-2 border-b border-gray-200 dark:border-gray-600">Date</th>
+                                <th class="px-4 py-2 border-b border-gray-200 dark:border-gray-600">State</th>
+                                <th class="px-4 py-2 border-b border-gray-200 dark:border-gray-600">Big Animals Died</th>
+                                <th class="px-4 py-2 border-b border-gray-200 dark:border-gray-600">Small Animals Died</th>
+                                <th class="px-4 py-2 border-b border-gray-200 dark:border-gray-600">Partially House</th>
+                                <th class="px-4 py-2 border-b border-gray-200 dark:border-gray-600">Severely House</th>
+                                <th class="px-4 py-2 border-b border-gray-200 dark:border-gray-600">Fully House</th>
+                                <th class="px-4 py-2 border-b border-gray-200 dark:border-gray-600">Cowshed Damaged</th>
+                                <th class="px-4 py-2 border-b border-gray-200 dark:border-gray-600">Human Died</th>
+                                <th class="px-4 py-2 border-b border-gray-200 dark:border-gray-600">Human Missing</th>
+                                <th class="px-4 py-2 border-b border-gray-200 dark:border-gray-600">Human Injured</th>
+                                <th class="px-4 py-2 border-b border-gray-200 dark:border-gray-600 text-center">Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody class="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700 text-sm">
+                            <!-- DataTables will populate rows here -->
+                        </tbody>
+                    </table>
+                </div>
 
             </div>
 
         </div>
     </div>
 
-    <!-- DataTables Script -->
-  <script>
-$(function () {
-    $('#incidents-table').DataTable({
-        processing: true,
-        serverSide: true,
-        ajax: "{{ route('admin.incidents.index') }}",
+    <!-- DataTables JS -->
+    
 
-        columns: [
-            { data: 'incident_type', name: 'incident_type' },
-            { data: 'incident_name', name: 'incident_name' },
-            { data: 'incident_date', name: 'incident_date' },
-            { data: 'state', name: 'state' },
-
-            { data: 'big_animals_died', name: 'big_animals_died' },
-            { data: 'small_animals_died', name: 'small_animals_died' },
-
-            { data: 'partially_house', name: 'partially_house' },
-            { data: 'severely_house', name: 'severely_house' },
-            { data: 'fully_house', name: 'fully_house' },
-            { data: 'cowshed_house', name: 'cowshed_house' },
-
-            { data: 'died', name: 'died', orderable: false, searchable: false },
-            { data: 'missing', name: 'missing', orderable: false, searchable: false },
-            { data: 'injured', name: 'injured', orderable: false, searchable: false },
-
-            { data: 'actions', name: 'actions', orderable: false, searchable: false },
-        ],
-
-        order: [[2, 'desc']]
-    });
-});
-</script>
-
-
+    <script>
+        $(function() {
+            $('#incidents-table').DataTable({
+                processing: true,
+                serverSide: true,
+                responsive: true,
+                ajax: "{{ route('admin.incidents.index') }}",
+                columns: [
+                    { data: 'incident_type', name: 'incident_type' },
+                    { data: 'incident_name', name: 'incident_name' },
+                    { data: 'incident_date', name: 'incident_date' },
+                    { data: 'state', name: 'state' },
+                    { data: 'big_animals_died', name: 'big_animals_died' },
+                    { data: 'small_animals_died', name: 'small_animals_died' },
+                    { data: 'partially_house', name: 'partially_house' },
+                    { data: 'severely_house', name: 'severely_house' },
+                    { data: 'fully_house', name: 'fully_house' },
+                    { data: 'cowshed_house', name: 'cowshed_house' },
+                    { data: 'died', name: 'died', orderable: false, searchable: false },
+                    { data: 'missing', name: 'missing', orderable: false, searchable: false },
+                    { data: 'injured', name: 'injured', orderable: false, searchable: false },
+                    { data: 'actions', name: 'actions', orderable: false, searchable: false, className: 'text-center' },
+                ],
+                order: [[2, 'desc']],
+                pageLength: 10,
+                lengthMenu: [10, 25, 50, 100],
+                language: {
+                    search: "<span class='text-gray-700 dark:text-gray-200'>Search:</span>",
+                    lengthMenu: "Show _MENU_ entries",
+                    paginate: {
+                        previous: "<",
+                        next: ">"
+                    }
+                },
+                createdRow: function(row, data, dataIndex){
+                    $(row).addClass('hover:bg-gray-100 dark:hover:bg-gray-700 transition');
+                }
+            });
+        });
+    </script>
 </x-app-layout>

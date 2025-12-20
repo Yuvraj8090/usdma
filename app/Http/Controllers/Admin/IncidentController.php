@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Models\DisasterType;
 use App\Models\Incident;
 use App\Models\HumanLoss;
 use App\Models\IncidentType;
@@ -139,10 +140,13 @@ class IncidentController extends Controller
     public function edit(Incident $incident)
     {
         $incident->load(['humanLosses', 'incidentType', 'disasterType']);
+        $states= State::all();
+        $districts = District::all();
+        $disasterTypes =DisasterType::all();
 
         $incidentTypes = IncidentType::active()->with('disasterTypes:id,incident_type_id,name')->orderBy('name')->get();
 
-        return view('admin.incidents.edit', compact('incident', 'incidentTypes'));
+        return view('admin.incidents.edit', compact('incident', 'incidentTypes','states','disasterTypes','districts'));
     }
 
     /**
