@@ -45,6 +45,14 @@ Route::get('/', [PageController::class, 'showWelcomePage'])->name('welcome');
 Route::get('/admin', function () {
     return Auth::check() ? redirect()->route('dashboard') : redirect()->route('login');
 });
+Route::get('/admin/get-disaster-types/{incidentType}', function ($incidentType) {
+    return \App\Models\DisasterType::where('incident_type_id', $incidentType)
+        ->where('is_active', true)
+        ->select('id', 'name')
+        ->orderBy('name')
+        ->get();
+})->middleware('auth');
+
 Route::middleware(['auth:sanctum', config('jetstream.auth_session'), 'verified'])->group(function () {
     Route::post('/admin/clear-cache', [PageController::class, 'clearCache'])->name('admin.clear.cache');
     Route::get('admin/daily-reports-dhams/pdf', [DailyReportDhamController::class, 'downloadPdf'])->name('admin.daily_reports_dhams.pdf');

@@ -9,7 +9,11 @@ class Incident extends Model
     protected $fillable = [
         'incident_uid',
         'incident_name',
+
+        // Types
         'incident_type_id',
+        'disaster_type_id',
+
         'steps',
         'incident_through',
         'state',
@@ -50,22 +54,29 @@ class Incident extends Model
     protected $casts = [
         'incident_date' => 'date',
         'incident_time' => 'datetime:H:i',
-        
     ];
 
-    /**
-     * One Incident -> Many Human Losses
-     */
+    /*
+    |--------------------------------------------------------------------------
+    | Relationships
+    |--------------------------------------------------------------------------
+    */
+
+    // One Incident -> Many Human Losses
     public function humanLosses()
     {
         return $this->hasMany(HumanLoss::class, 'incident_id');
     }
 
-    /**
-     * Incident Type
-     */
+    // Incident → Incident Type
     public function incidentType()
     {
         return $this->belongsTo(IncidentType::class, 'incident_type_id');
+    }
+
+    // Incident → Disaster Type
+    public function disasterType()
+    {
+        return $this->belongsTo(DisasterType::class, 'disaster_type_id');
     }
 }

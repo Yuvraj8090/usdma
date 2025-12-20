@@ -9,7 +9,7 @@ use App\Models\IncidentType;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
 use DB;
- use App\Models\State;
+use App\Models\State;
 use App\Models\District;
 use Yajra\DataTables\Facades\DataTables;
 class IncidentController extends Controller
@@ -21,37 +21,34 @@ class IncidentController extends Controller
     public function index(Request $request)
     {
         if ($request->ajax()) {
-            $incidents = Incident::with('humanLosses', 'incidentType')->select('incidents.*');
+            $incidents = Incident::with(['humanLosses', 'incidentType:id,name', 'disasterType:id,name'])->select('incidents.*');
 
             return DataTables::of($incidents)
-                ->addColumn('incident_type', fn($incident) => $incident->incidentType->name ?? 'N/A')
-                ->addColumn('died', fn($incident) => $incident->humanLosses->where('loss_type', 'died')->count())
-                ->addColumn('missing', fn($incident) => $incident->humanLosses->where('loss_type', 'missing')->count())
-                ->addColumn('injured', fn($incident) => $incident->humanLosses->where('loss_type', 'normal_damage')->count())
-                ->addColumn('actions', function ($incident) {
-                    return view('admin.incidents.partials.actions', compact('incident'))->render();
-                })
+                ->addColumn('incident_type', fn($i) => $i->incidentType->name ?? 'N/A')
+                ->addColumn('disaster_type', fn($i) => $i->disasterType->name ?? 'N/A')
+                ->addColumn('died', fn($i) => $i->humanLosses->where('loss_type', 'died')->count())
+                ->addColumn('missing', fn($i) => $i->humanLosses->where('loss_type', 'missing')->count())
+                ->addColumn('injured', fn($i) => $i->humanLosses->where('loss_type', 'normal_damage')->count())
+                ->addColumn('actions', fn($incident) => view('admin.incidents.partials.actions', compact('incident'))->render())
                 ->rawColumns(['actions'])
                 ->make(true);
         }
 
         return view('admin.incidents.index');
     }
+
     /**
      * Create page
      */
-  
 
-public function create()
-{
-    $incidentTypes = IncidentType::active()->get();
+    public function create()
+    {
+        $incidentTypes = IncidentType::active()->with('disasterTypes:id,incident_type_id,name')->orderBy('name')->get();
 
-    $states = State::where('is_active', true)
-        ->orderBy('name')
-        ->get();
+        $states = State::where('is_active', true)->orderBy('name')->get();
 
-    return view('admin.incidents.create', compact('incidentTypes', 'states'));
-}
+        return view('admin.incidents.create', compact('incidentTypes', 'states'));
+    }
 
     /**
      * Store new incident
@@ -61,37 +58,39 @@ public function create()
         $validated = $request->validate([
             'incident_name' => 'required|string|max:255',
             'incident_type_id' => 'required|exists:incident_types,id',
+            'disaster_type_id' => 'required|exists:disaster_types,id',
+
             'state' => 'required|string|max:100',
             'district' => 'required|string|max:100',
             'village' => 'nullable|string|max:100',
+
             'latitude' => 'nullable|numeric',
             'longitude' => 'nullable|numeric',
+
             'incident_date' => 'required|date',
             'incident_time' => 'required',
 
             // Animal loss
-            'big_animals_died' => 'nullable|integer',
-            'small_animals_died' => 'nullable|integer',
-            'hen_count' => 'nullable|integer',
-            'other_animal_count' => 'nullable|integer',
+            'big_animals_died' => 'nullable|integer|min:0',
+            'small_animals_died' => 'nullable|integer|min:0',
+            'hen_count' => 'nullable|integer|min:0',
+            'other_animal_count' => 'nullable|integer|min:0',
 
             // House damage
-            'partially_house' => 'nullable|integer',
-            'severely_house' => 'nullable|integer',
-            'fully_house' => 'nullable|integer',
-            'cowshed_house' => 'nullable|integer',
-            'hut_count' => 'nullable|integer',
+            'partially_house' => 'nullable|integer|min:0',
+            'severely_house' => 'nullable|integer|min:0',
+            'fully_house' => 'nullable|integer|min:0',
+            'cowshed_house' => 'nullable|integer|min:0',
+            'hut_count' => 'nullable|integer|min:0',
 
-            // Agriculture & infrastructure
-            'agriculture_land_loss_hectare' => 'nullable|numeric',
-            'helicopter_sorties' => 'nullable|integer',
+            // Infrastructure
+            'agriculture_land_loss_hectare' => 'nullable|numeric|min:0',
+            'helicopter_sorties' => 'nullable|integer|min:0',
             'electricity_line_damage' => 'nullable|integer|min:0',
-'water_pipeline_damage'   => 'nullable|integer|min:0',
-'road_damage'             => 'nullable|integer|min:0',
+            'water_pipeline_damage' => 'nullable|integer|min:0',
+            'road_damage' => 'nullable|integer|min:0',
 
-
-            // Rehabilitation
-            'punha_sthapanna_road_road' => 'nullable|string',
+            'punha_sthapanna_road' => 'nullable|string|max:255',
 
             'file' => 'nullable|file|max:4096',
             'loss' => 'nullable|array',
@@ -106,7 +105,6 @@ public function create()
 
             $incident = Incident::create($validated);
 
-            /** Human losses */
             if ($request->filled('loss')) {
                 foreach ($request->loss as $row) {
                     $incident->humanLosses()->create([
@@ -140,8 +138,9 @@ public function create()
      */
     public function edit(Incident $incident)
     {
-        $incident->load('humanLosses');
-        $incidentTypes = IncidentType::active()->orderBy('name')->get();
+        $incident->load(['humanLosses', 'incidentType', 'disasterType']);
+
+        $incidentTypes = IncidentType::active()->with('disasterTypes:id,incident_type_id,name')->orderBy('name')->get();
 
         return view('admin.incidents.edit', compact('incident', 'incidentTypes'));
     }
@@ -154,33 +153,19 @@ public function create()
         $validated = $request->validate([
             'incident_name' => 'required|string|max:255',
             'incident_type_id' => 'required|exists:incident_types,id',
+            'disaster_type_id' => 'required|exists:disaster_types,id',
+
             'state' => 'required|string|max:100',
             'district' => 'required|string|max:100',
             'village' => 'nullable|string|max:100',
+
             'latitude' => 'nullable|numeric',
             'longitude' => 'nullable|numeric',
+
             'incident_date' => 'required|date',
             'incident_time' => 'required',
 
-            'big_animals_died' => 'nullable|integer',
-            'small_animals_died' => 'nullable|integer',
-            'hen_count' => 'nullable|integer',
-            'other_animal_count' => 'nullable|integer',
-
-            'partially_house' => 'nullable|integer',
-            'severely_house' => 'nullable|integer',
-            'fully_house' => 'nullable|integer',
-            'cowshed_house' => 'nullable|integer',
-            'hut_count' => 'nullable|integer',
-
-            'agriculture_land_loss_hectare' => 'nullable|numeric',
-            'helicopter_sorties' => 'nullable|integer',
-            'electricity_line_damage' => 'nullable|integer|min:0',
-'water_pipeline_damage'   => 'nullable|integer|min:0',
-'road_damage'             => 'nullable|integer|min:0',
-
-
-            'punha_sthapanna_road' => 'nullable|string',
+            'punha_sthapanna_road' => 'nullable|string|max:255',
             'file' => 'nullable|file|max:4096',
         ]);
 

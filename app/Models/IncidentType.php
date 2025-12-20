@@ -17,6 +17,12 @@ class IncidentType extends Model
     {
         return $this->hasMany(Incident::class, 'incident_type_id');
     }
+    
+
+    public function disasterTypes()
+    {
+        return $this->hasMany(DisasterType::class, 'incident_type_id');
+    }
 
     // 🔥 Add this method
     public function scopeActive($query)
