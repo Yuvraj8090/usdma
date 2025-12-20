@@ -11,9 +11,10 @@ return new class extends Migration
         Schema::create('human_losses', function (Blueprint $table) {
             $table->id();
 
-            // Relationship to incidents
-            $table->unsignedBigInteger('incident_id');
-            $table->foreign('incident_id')->references('id')->on('incidents')->onDelete('cascade');
+            // Correct FK definition
+            $table->foreignId('incident_id')
+                  ->constrained('incidents')
+                  ->cascadeOnDelete();
 
             // Personal details
             $table->string('name');
@@ -21,9 +22,10 @@ return new class extends Migration
             $table->enum('sex', ['male', 'female', 'other'])->nullable();
 
             // Loss type
-            $table->enum('loss_type', ['died', 'missing', 'normal_damage'])->default('normal_damage');
+            $table->enum('loss_type', ['died', 'missing', 'normal_damage'])
+                  ->default('normal_damage');
 
-            // Address details
+            // Address
             $table->string('address')->nullable();
             $table->string('state')->nullable();
             $table->string('district')->nullable();
@@ -31,9 +33,10 @@ return new class extends Migration
             // Compensation
             $table->decimal('compensation_amount', 12, 2)->nullable();
             $table->date('compensation_received_date')->nullable();
-            $table->enum('compensation_status', ['pending', 'approved', 'rejected'])->default('pending');
+            $table->enum('compensation_status', ['pending', 'approved', 'rejected'])
+                  ->default('pending');
 
-            // Nominee JSON (name, relation, address, age, number)
+            // Nominee details
             $table->json('nominee')->nullable();
 
             $table->timestamps();
