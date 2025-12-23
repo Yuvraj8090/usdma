@@ -23,6 +23,18 @@
                 </div>
             </div>
 
+            <div class="bg-white dark:bg-gray-700 rounded-xl shadow-lg p-6 hover:shadow-xl transition duration-200">
+                <div class="flex items-center space-x-4">
+                    <div class="p-4 rounded-full bg-blue-100 dark:bg-blue-900 text-blue-600 dark:text-blue-200">
+                        <i class="fas fa-users text-2xl"></i>
+                    </div>
+                    <div>
+                        <p class="text-gray-500 dark:text-gray-300 font-medium">Total Incidents</p>
+                        <h3 class="text-2xl font-bold text-gray-800 dark:text-white">{{ $totalIncidents }}</h3>
+                    </div>
+                </div>
+            </div>
+
             {{-- Active Sessions --}}
             <div class="bg-white dark:bg-gray-700 rounded-xl shadow-lg p-6 hover:shadow-xl transition duration-200">
                 <div class="flex items-center space-x-4">
@@ -71,8 +83,11 @@
                     <div class="px-6 py-4 hover:bg-gray-100 dark:hover:bg-gray-800 transition duration-150">
                         <p class="text-gray-600 dark:text-gray-300">
                             <strong>User Agent:</strong> {{ $visitor->user_agent }} <br>
-                            <strong>Location:</strong> {{ $visitor->location['city'] ?? 'N/A' }}, {{ $visitor->location['region'] ?? 'N/A' }}, {{ $visitor->location['country'] ?? 'N/A' }} <br>
-                            <strong>Last Activity:</strong> {{ \Carbon\Carbon::createFromTimestamp($visitor->last_activity)->diffForHumans() }}
+                            <strong>Location:</strong> {{ $visitor->location['city'] ?? 'N/A' }},
+                            {{ $visitor->location['region'] ?? 'N/A' }}, {{ $visitor->location['country'] ?? 'N/A' }}
+                            <br>
+                            <strong>Last Activity:</strong>
+                            {{ \Carbon\Carbon::createFromTimestamp($visitor->last_activity)->diffForHumans() }}
                         </p>
                     </div>
                 @endforeach
@@ -105,7 +120,9 @@
             options: {
                 responsive: true,
                 plugins: {
-                    legend: { display: false }
+                    legend: {
+                        display: false
+                    }
                 }
             }
         });

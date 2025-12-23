@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\User;
+use App\Models\Incident;
+
 use Illuminate\Support\Facades\DB;
 
 class AnalyticsController extends Controller
@@ -12,6 +14,7 @@ class AnalyticsController extends Controller
     {
         // Total Users
         $totalUsers = User::count();
+        $totalIncidents = Incident::count();
 
         // Active sessions in last 30 minutes
         $activeSessions = DB::table('sessions')
@@ -35,6 +38,7 @@ class AnalyticsController extends Controller
 
         return view('dashboard', compact(
             'totalUsers',
+            'totalIncidents',
             'activeSessions',
             'visitorData',
             'dailyTraffic'

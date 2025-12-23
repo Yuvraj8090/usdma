@@ -28,7 +28,7 @@
         <nav class="space-y-2">
 
             {{-- 🏠 Dashboard --}}
-            <x-sidebar.link route="dashboard" label="Dashboard" icon="fas fa-home" :active="request()->routeIs('dashboard')" />
+            <x-sidebar.link route="dashboard" label="Analytics" icon="fas fa-home" :active="request()->routeIs('dashboard')" />
 <x-sidebar.link route="admin.incidents.index" label="Add Incidents" icon="fas fa-bolt"
                         :active="request()->routeIs('admin.incidents.*')" />
             {{-- 👑 Admin Section --}}
