@@ -23,15 +23,6 @@
                     <h3 class="stat-value">{{ $totalUsers }}</h3>
                 </div>
             </div>
-            <div class="stat-card">
-                <div class="stat-icon bg-blue-100 dark:bg-blue-900 text-blue-600 dark:text-blue-300">
-                    <i class="fas fa-users"></i>
-                </div>
-                <div>
-                    <p class="stat-label">Total Users</p>
-                    <h3 class="stat-value"> {{ $totalHumanLoss }}</h3>
-                </div>
-            </div>
 
             {{-- Total Incidents --}}
             <div class="stat-card">
@@ -140,9 +131,7 @@
             options: {
                 responsive: true,
                 plugins: {
-                    legend: {
-                        display: false
-                    }
+                    legend: { display: false }
                 },
                 scales: {
                     y: {
@@ -153,5 +142,5 @@
         });
     </script>
 
-
+  
 </x-app-layout>
