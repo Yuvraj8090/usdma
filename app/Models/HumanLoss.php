@@ -25,4 +25,9 @@ class HumanLoss extends Model
         'nominee' => 'array', // <-- ensures $hl->nominee is always an array
         'compensation_received_date' => 'date',
     ];
+    public static function diedCount()
+{
+    return self::where('loss_type', 'died')->count();
+}
+
 }
