@@ -1,6 +1,6 @@
 # Laravel standard ignores
-/vendor
-/node_modules
+# /vendor
+# /node_modules
 /.env
 /.env.*.backup
 Homestead.yaml
@@ -10,8 +10,8 @@ Homestead.json
 /.phpunit.result.cache
 .phpunit.result.cache
 /.php_cs.cache
-/build/*
-/build
+# /build/*
+# /build
 
 # Log files
 *.log
@@ -48,12 +48,12 @@ Thumbs.db
 .env.backup
 .env.testing
 
-/vendor/_laravel_ide/_model_helpers.php
+# /vendor/_laravel_ide/_model_helpers.php
 
-/vendor/_laravel_ide
-vendor/_laravel_ide/_model_helpers.php
-vendor/_laravel_ide/_model_helpers.php
-vendor/_laravel_ide/_model_helpers.php
+# /vendor/_laravel_ide
+# vendor/_laravel_ide/_model_helpers.php
+# vendor/_laravel_ide/_model_helpers.php
+# vendor/_laravel_ide/_model_helpers.php
 public/storage
 public/hot
 .env
