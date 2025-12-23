@@ -11,7 +11,7 @@
     <div class="py-6 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-8">
 
         {{-- STATS CARDS --}}
-        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-6">
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
 
             {{-- Total Users --}}
             <div class="stat-card">
@@ -23,21 +23,19 @@
                     <h3 class="stat-value">{{ $totalUsers }}</h3>
                 </div>
             </div>
-
-            {{-- Total Deaths --}}
             <div class="stat-card">
-                <div class="stat-icon bg-red-100 dark:bg-red-900 text-red-600 dark:text-red-300">
-                    <i class="fas fa-skull-crossbones"></i>
+                <div class="stat-icon bg-blue-100 dark:bg-blue-900 text-blue-600 dark:text-blue-300">
+                    <i class="fas fa-users"></i>
                 </div>
                 <div>
-                    <p class="stat-label">Total Deaths</p>
-                    <h3 class="stat-value">{{ $totalHumanLoss }}</h3>
+                    <p class="stat-label">Total Users</p>
+                    <h3 class="stat-value"> {{ $totalHumanLoss }}</h3>
                 </div>
             </div>
 
             {{-- Total Incidents --}}
             <div class="stat-card">
-                <div class="stat-icon bg-orange-100 dark:bg-orange-900 text-orange-600 dark:text-orange-300">
+                <div class="stat-icon bg-red-100 dark:bg-red-900 text-red-600 dark:text-red-300">
                     <i class="fas fa-exclamation-triangle"></i>
                 </div>
                 <div>
@@ -69,7 +67,6 @@
             </div>
 
         </div>
-
 
         {{-- TRAFFIC CHART --}}
         <div class="bg-white dark:bg-gray-800 rounded-xl shadow-md">

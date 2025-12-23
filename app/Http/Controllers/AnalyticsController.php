@@ -4,7 +4,6 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\User;
-use App\Models\HumanLoss;
 use App\Models\Incident;
 
 use Illuminate\Support\Facades\DB;
@@ -15,12 +14,7 @@ class AnalyticsController extends Controller
     {
         // Total Users
         $totalUsers = User::count();
-
-        // Total Incidents
         $totalIncidents = Incident::count();
-
-        // ✅ Total Human Loss where loss_type = 'Died'
-        $totalHumanLoss = HumanLoss::where('loss_type', 'died')->count();
 
         // Active sessions in last 30 minutes
         $activeSessions = DB::table('sessions')
@@ -37,9 +31,18 @@ class AnalyticsController extends Controller
             });
 
         // Daily traffic stats
-        $dailyTraffic = DB::table('sessions')->select(DB::raw('DATE(FROM_UNIXTIME(last_activity)) as date'), DB::raw('COUNT(*) as session_count'))->groupBy(DB::raw('DATE(FROM_UNIXTIME(last_activity))'))->get();
+        $dailyTraffic = DB::table('sessions')
+            ->select(DB::raw('DATE(FROM_UNIXTIME(last_activity)) as date'), DB::raw('COUNT(*) as session_count'))
+            ->groupBy(DB::raw('DATE(FROM_UNIXTIME(last_activity))'))
+            ->get();
 
-        return view('dashboard', compact('totalUsers', 'totalIncidents', 'totalHumanLoss', 'activeSessions', 'visitorData', 'dailyTraffic'));
+        return view('dashboard', compact(
+            'totalUsers',
+            'totalIncidents',
+            'activeSessions',
+            'visitorData',
+            'dailyTraffic'
+        ));
     }
 
     private function getLocationByIp($ip)
