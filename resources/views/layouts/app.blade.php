@@ -69,15 +69,7 @@
 
                     <!-- Dark Mode Toggle -->
                     <div class="flex items-center space-x-4">
-                        <button @click="toggleDarkMode()"
-                            class="p-2 rounded-full bg-indigo-600 dark:bg-indigo-800 text-white hover:bg-indigo-700 dark:hover:bg-indigo-900 transition-colors">
-                            <template x-if="!darkMode">
-                                <i class="fas fa-moon"></i>
-                            </template>
-                            <template x-if="darkMode">
-                                <i class="fas fa-sun"></i>
-                            </template>
-                        </button>
+                        
                         <x-dropdown align="right" width="48">
                             <x-slot name="trigger">
                                 <button class="flex items-center text-sm rounded-full focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
@@ -110,16 +102,6 @@
 
     @livewireScripts
     <script src="{{ asset('js/alpine.min.js') }}" defer></script>
-    <script>
-        function themeLayout() {
-            return {
-                darkMode: localStorage.getItem('darkMode') === 'true',
-                toggleDarkMode() {
-                    this.darkMode = !this.darkMode;
-                    localStorage.setItem('darkMode', this.darkMode);
-                }
-            }
-        }
-    </script>
+   
 </body>
 </html>
