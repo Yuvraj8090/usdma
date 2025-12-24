@@ -4482,10 +4482,12 @@ namespace App\Models {
      * @property mixed $category_id
      * @property string|null $code
      * @property string $name
+     * @property mixed $activity_id
      * @property int $id
      * @property-read \App\Models\District $district
      * @property-read \App\Models\EquipmentCategory $category
      * @method static \Illuminate\Database\Eloquent\Builder<Equipment>|Equipment whereId($value)
+     * @method static \Illuminate\Database\Eloquent\Builder<Equipment>|Equipment whereActivityId($value)
      * @method static \Illuminate\Database\Eloquent\Builder<Equipment>|Equipment whereName($value)
      * @method static \Illuminate\Database\Eloquent\Builder<Equipment>|Equipment whereCode($value)
      * @method static \Illuminate\Database\Eloquent\Builder<Equipment>|Equipment whereCategoryId($value)
