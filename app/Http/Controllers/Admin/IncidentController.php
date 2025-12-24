@@ -29,7 +29,7 @@ class IncidentController extends Controller
                 ->addColumn('disaster_type', fn($i) => $i->disasterType->name ?? 'N/A')
                 ->addColumn('died', fn($i) => $i->humanLosses->where('loss_type', 'died')->count())
                 ->addColumn('missing', fn($i) => $i->humanLosses->where('loss_type', 'missing')->count())
-                ->addColumn('injured', fn($i) => $i->humanLosses->where('loss_type', 'normal_damage')->count())
+                ->addColumn('injured', fn($i) => $i->humanLosses->where('loss_type', 'injured')->count())
                 ->addColumn('actions', fn($incident) => view('admin.incidents.partials.actions', compact('incident'))->render())
                 ->rawColumns(['actions'])
                 ->make(true);

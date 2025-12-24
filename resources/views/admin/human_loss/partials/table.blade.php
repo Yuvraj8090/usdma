@@ -102,7 +102,7 @@
                             <option value="">Select</option>
                             <option value="died">Died</option>
                             <option value="missing">Missing</option>
-                            <option value="normal_damage">Normal Damage</option>
+                            <option value="injured">Injured</option>
                         </select>
                     </div>
                     <div class="md:col-span-2">

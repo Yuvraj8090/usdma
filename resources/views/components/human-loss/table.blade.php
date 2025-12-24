@@ -106,7 +106,7 @@ x-data="{
                     <select class="input w-full" x-model="row.loss_type" :name="'loss['+index+'][loss_type]'">
                         <option value="died">Died</option>
                         <option value="missing">Missing</option>
-                        <option value="normal_damage">Normal Damage</option>
+                        <option value="injured">Injured</option>
                     </select>
                 </div>
 

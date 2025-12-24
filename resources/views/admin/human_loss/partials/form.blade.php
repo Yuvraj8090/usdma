@@ -26,7 +26,7 @@
                             <option value="">Select</option>
                             <option value="died" {{ old('loss_type')=='died' ? 'selected' : '' }}>Died</option>
                             <option value="missing" {{ old('loss_type')=='missing' ? 'selected' : '' }}>Missing</option>
-                            <option value="normal_damage" {{ old('loss_type')=='normal_damage' ? 'selected' : '' }}>Normal Damage</option>
+                            <option value="injured" {{ old('loss_type')=='injured' ? 'selected' : '' }}>Injured</option>
                         </select>
                     </div>
 
