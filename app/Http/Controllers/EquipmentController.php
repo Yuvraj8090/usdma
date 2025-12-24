@@ -9,16 +9,39 @@ use App\Models\Activity;
 use App\Models\ResourceType;
 use App\Http\Requests\StoreEquipmentRequest;
 use App\Http\Requests\UpdateEquipmentRequest;
+use Yajra\DataTables\Facades\DataTables;
+use Illuminate\Http\Request;
 
 class EquipmentController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
-        $equipments = Equipment::with(['district', 'category', 'activity', 'resourceType'])
-            ->latest()
-            ->paginate(10);
+        if ($request->ajax()) {
+            $equipments = Equipment::with(['district', 'category', 'activity', 'resourceType'])->latest();
 
-        return view('admin.equipment.index', compact('equipments'));
+            return DataTables::of($equipments)
+                ->addColumn('district', fn($e) => $e->district->name ?? '-')
+                ->addColumn('category', fn($e) => $e->category->name ?? '-')
+                ->addColumn('activity', fn($e) => $e->activity->activity_name ?? '-')
+                ->addColumn('resource_type', fn($e) => $e->resourceType->resource_type ?? '-')
+                ->addColumn('quantity', fn($e) => '<span class="px-3 py-1 inline-flex text-xs font-semibold rounded-full '
+                    . ($e->quantity > 10 ? 'bg-green-100 text-green-800' : ($e->quantity > 0 ? 'bg-yellow-100 text-yellow-800' : 'bg-red-100 text-red-800'))
+                    . '">' . $e->quantity . '</span>')
+                ->addColumn('status', fn($e) => '<span class="px-3 py-1 inline-flex text-xs font-semibold rounded-full '
+                    . ($e->is_active ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800')
+                    . '">' . ($e->is_active ? 'Active' : 'Inactive') . '</span>')
+                ->addColumn('action', fn($e) => '
+                    <a href="' . route('admin.equipment.edit', $e->id) . '" class="text-blue-600 hover:text-blue-900"><i class="fas fa-edit"></i></a>
+                    <form action="' . route('admin.equipment.destroy', $e->id) . '" method="POST" class="inline" onsubmit="return confirm(\'Are you sure?\')">
+                        ' . csrf_field() . method_field('DELETE') . '
+                        <button type="submit" class="text-red-600 hover:text-red-900"><i class="fas fa-trash"></i></button>
+                    </form>
+                ')
+                ->rawColumns(['quantity', 'status', 'action'])
+                ->make(true);
+        }
+
+        return view('admin.equipment.index');
     }
 
     public function create()
@@ -33,19 +56,8 @@ class EquipmentController extends Controller
 
     public function store(StoreEquipmentRequest $request)
     {
-        try {
-            Equipment::create($request->validated());
-            return redirect()->route('admin.equipment.index')
-                ->with('success', 'Equipment created successfully.');
-        } catch (\Exception $e) {
-            return back()->withInput()->with('error', 'Error creating equipment: ' . $e->getMessage());
-        }
-    }
-
-    public function show(Equipment $equipment)
-    {
-        $equipment->load(['district', 'category', 'activity', 'resourceType']);
-        return view('admin.equipment.show', compact('equipment'));
+        Equipment::create($request->validated());
+        return redirect()->route('admin.equipment.index')->with('success', 'Equipment created successfully.');
     }
 
     public function edit(Equipment $equipment)
@@ -60,23 +72,13 @@ class EquipmentController extends Controller
 
     public function update(UpdateEquipmentRequest $request, Equipment $equipment)
     {
-        try {
-            $equipment->update($request->validated());
-            return redirect()->route('admin.equipment.index')
-                ->with('success', 'Equipment updated successfully.');
-        } catch (\Exception $e) {
-            return back()->withInput()->with('error', 'Error updating equipment: ' . $e->getMessage());
-        }
+        $equipment->update($request->validated());
+        return redirect()->route('admin.equipment.index')->with('success', 'Equipment updated successfully.');
     }
 
     public function destroy(Equipment $equipment)
     {
-        try {
-            $equipment->delete();
-            return redirect()->route('admin.equipment.index')
-                ->with('success', 'Equipment deleted successfully.');
-        } catch (\Exception $e) {
-            return back()->with('error', 'Error deleting equipment: ' . $e->getMessage());
-        }
+        $equipment->delete();
+        return redirect()->route('admin.equipment.index')->with('success', 'Equipment deleted successfully.');
     }
 }

@@ -10,10 +10,7 @@ use Illuminate\Http\Request;
 
 class AccidentalReportController extends Controller
 {
-    /**
-     * Display a listing of reports.
-     */
-    public function index(Request $request)
+   public function index(Request $request)
 {
     $query = AccidentalReport::with(['district', 'fillableCategory'])
         ->selectRaw('district_id, fillable_id, report_date, SUM(count) as total_count')
@@ -31,13 +28,14 @@ class AccidentalReportController extends Controller
         $query->whereDate('report_date', $request->report_date);
     }
 
-    $reports   = $query->orderBy('report_date', 'desc')->paginate(15);
+    $reports = $query->orderBy('report_date', 'desc')->paginate(15);
     $districts = District::all();
-    $parents   = AccidentalReportFillable::with('children')
-        ->whereNull('parent_id')
-        ->get();
+    $parents = AccidentalReportFillable::with('children')->whereNull('parent_id')->get();
 
-    return view('admin.accidental_reports.index', compact('reports', 'districts', 'parents'));
+    // Pass the header here
+    $header = 'Add Incidents';
+
+    return view('admin.accidental_reports.index', compact('reports', 'districts', 'parents', 'header'));
 }
 
 
@@ -47,9 +45,7 @@ class AccidentalReportController extends Controller
     public function create()
     {
         $districts = District::all();
-        $parents   = AccidentalReportFillable::with('children')
-            ->whereNull('parent_id')
-            ->get();
+        $parents = AccidentalReportFillable::with('children')->whereNull('parent_id')->get();
 
         return view('admin.accidental_reports.create', compact('districts', 'parents'));
     }
@@ -61,26 +57,25 @@ class AccidentalReportController extends Controller
     {
         $request->validate([
             'report_date' => 'required|date',
-            'reports'     => 'required|array',
+            'reports' => 'required|array',
         ]);
 
         foreach ($request->reports as $districtId => $childReports) {
             foreach ($childReports as $childId => $reportData) {
-                $count = (int)($reportData['count'] ?? 0);
+                $count = (int) ($reportData['count'] ?? 0);
 
                 if ($count > 0) {
                     AccidentalReport::create([
                         'district_id' => $districtId,
                         'fillable_id' => $childId,
-                        'count'       => $count,
+                        'count' => $count,
                         'report_date' => $request->report_date,
                     ]);
                 }
             }
         }
 
-        return redirect()->route('admin.accidental_reports.index')
-            ->with('success', 'Accidental reports added successfully.');
+        return redirect()->route('admin.accidental_reports.index')->with('success', 'Accidental reports added successfully.');
     }
 
     /**
@@ -102,14 +97,13 @@ class AccidentalReportController extends Controller
         $request->validate([
             'district_id' => 'required|exists:districts,id',
             'fillable_id' => 'required|exists:accidental_reports_fillable,id',
-            'count'       => 'required|integer|min:0',
+            'count' => 'required|integer|min:0',
             'report_date' => 'required|date',
         ]);
 
         $accidentalReport->update($request->only('district_id', 'fillable_id', 'count', 'report_date'));
 
-        return redirect()->route('admin.accidental_reports.index')
-            ->with('success', 'Accidental report updated successfully.');
+        return redirect()->route('admin.accidental_reports.index')->with('success', 'Accidental report updated successfully.');
     }
 
     /**
@@ -119,7 +113,6 @@ class AccidentalReportController extends Controller
     {
         $accidentalReport->delete();
 
-        return redirect()->route('admin.accidental_reports.index')
-            ->with('success', 'Accidental report deleted successfully.');
+        return redirect()->route('admin.accidental_reports.index')->with('success', 'Accidental report deleted successfully.');
     }
 }

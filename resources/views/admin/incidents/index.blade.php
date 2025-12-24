@@ -1,11 +1,18 @@
 <x-app-layout>
+    <x-slot name="header">
+        <div class="flex items-center gap-3">
+            <i class="fas fa-exclamation-triangle text-yellow-500 text-xl"></i>
+            <h2 class="font-semibold text-xl text-gray-800 dark:text-gray-200">
+               Add Incidents
+            </h2>
+        </div>
+    </x-slot>
+
     <div class="min-h-screen p-6 bg-gray-100 dark:bg-gray-900">
-
         <div class="w-full">
-
             <div class="bg-white dark:bg-gray-800 shadow-lg rounded-lg overflow-hidden">
 
-                <!-- Header -->
+                <!-- Page Header -->
                 <div class="px-6 py-4 border-b border-gray-200 dark:border-gray-700 flex justify-between items-center">
                     <h2 class="text-2xl font-bold text-gray-800 dark:text-white flex items-center gap-2">
                         <i class="fas fa-exclamation-triangle text-yellow-500"></i>
@@ -18,18 +25,25 @@
                     </a>
                 </div>
 
-                <!-- Success -->
+                <!-- Flash Messages -->
                 @if (session('success'))
                     <div class="m-6 p-4 bg-green-500 text-white rounded flex items-center gap-2">
                         <i class="fas fa-check-circle"></i> {{ session('success') }}
                     </div>
                 @endif
 
-                <!-- Table -->
+                @if ($errors->any())
+                    <div class="m-6 p-4 bg-red-500 text-white rounded flex items-center gap-2">
+                        <i class="fas fa-exclamation-circle"></i> {{ $errors->first() }}
+                    </div>
+                @endif
+
+                <!-- Incidents Table -->
                 <div class="p-6 overflow-x-auto">
-                    <table id="incidents-table" class="min-w-full divide-y divide-gray-200 dark:divide-gray-700 table-auto border border-gray-300 dark:border-gray-600">
+                    <table id="incidents-table"
+                        class="min-w-full divide-y divide-gray-200 dark:divide-gray-700 table-auto border border-gray-300 dark:border-gray-600">
                         <thead class="bg-gray-50 dark:bg-gray-700">
-                            <tr class="text-gray-700 dark:text-gray-200 text-left text-sm font-semibold">
+                            <tr class="text-gray-700 dark:text-gray-200 text-left text-sm font-semibold uppercase tracking-wider">
                                 <th class="px-4 py-2 border-b border-gray-200 dark:border-gray-600">Type</th>
                                 <th class="px-4 py-2 border-b border-gray-200 dark:border-gray-600">Incident Name</th>
                                 <th class="px-4 py-2 border-b border-gray-200 dark:border-gray-600">Date</th>
@@ -53,13 +67,10 @@
                 </div>
 
             </div>
-
         </div>
     </div>
 
     <!-- DataTables JS -->
-    
-
     <script>
         $(function() {
             $('#incidents-table').DataTable({
@@ -89,12 +100,9 @@
                 language: {
                     search: "<span class='text-gray-700 dark:text-gray-200'>Search:</span>",
                     lengthMenu: "Show _MENU_ entries",
-                    paginate: {
-                        previous: "<",
-                        next: ">"
-                    }
+                    paginate: { previous: "<", next: ">" }
                 },
-                createdRow: function(row, data, dataIndex){
+                createdRow: function(row) {
                     $(row).addClass('hover:bg-gray-100 dark:hover:bg-gray-700 transition');
                 }
             });

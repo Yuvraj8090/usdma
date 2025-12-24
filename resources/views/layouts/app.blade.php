@@ -64,7 +64,8 @@
                             class="lg:hidden mr-4 text-gray-500 dark:text-gray-400 hover:text-gray-600 dark:hover:text-gray-300">
                             <i class="fas fa-bars"></i>
                         </button>
-                        <h1 class="text-xl font-semibold text-gray-800 dark:text-gray-200">{{ $header ?? 'Dashboard' }}</h1>
+                       <h1 class="text-xl font-semibold text-gray-800 dark:text-gray-200">{{ $header ?? 'Dashboard' }}</h1>
+
                     </div>
 
                     <!-- Dark Mode Toggle -->
