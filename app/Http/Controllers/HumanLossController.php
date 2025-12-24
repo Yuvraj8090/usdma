@@ -14,26 +14,25 @@ class HumanLossController extends Controller
     }
 
     public function nomineeRow(Request $request)
-{
-    $i = $request->query('i', 0);
-    $nominee = $request->query('nominee');
-    $nominee = $nominee ? json_decode($nominee, true) : null;
+    {
+        $i = $request->query('i', 0);
+        $nominee = $request->query('nominee');
+        $nominee = $nominee ? json_decode($nominee, true) : null;
 
-    return view('admin.human_loss.partials.nominee-row', compact('i', 'nominee'));
-}
-
+        return view('admin.human_loss.partials.nominee-row', compact('i', 'nominee'));
+    }
 
     public function store(Request $request, $incidentId)
     {
         $rules = [
-            'name' => 'required',
-            'loss_type' => 'required',
+            'name' => 'required|string|max:255',
+            'loss_type' => 'required|in:died,missing,injured',
             'nominees' => 'array',
         ];
 
         if ($request->loss_type === 'died') {
-            $rules['nominees.*.name'] = 'required';
-            $rules['nominees.*.relation'] = 'required';
+            $rules['nominees.*.name'] = 'required|string';
+            $rules['nominees.*.relation'] = 'required|string';
         }
 
         $request->validate($rules);
@@ -48,16 +47,23 @@ class HumanLossController extends Controller
                 'address' => $request->address,
                 'state' => $request->state,
                 'district' => $request->district,
-                'compensation_amount' => $request->compensation_amount,
-                'compensation_received_date' => $request->compensation_received_date,
-                'compensation_status' => $request->compensation_status,
-                'nominee' => $request->nominees,
+
+                // ✅ DEFAULT SAFE HANDLING
+                'compensation_amount' => $request->filled('compensation_amount') ? $request->compensation_amount : 0,
+
+                'compensation_received_date' => $request->filled('compensation_received_date') ? $request->compensation_received_date : null,
+
+                'compensation_status' => $request->filled('compensation_status') ? $request->compensation_status : 'pending',
+
+                'nominee' => $request->nominees ?? [],
             ]);
 
             return redirect()->back()->with('success', 'Human Loss record saved successfully!');
-
         } catch (\Exception $e) {
-            return redirect()->back()->with('error', 'Something went wrong: ' . $e->getMessage())->withInput();
+            return redirect()
+                ->back()
+                ->with('error', 'Something went wrong: ' . $e->getMessage())
+                ->withInput();
         }
     }
 
@@ -69,14 +75,14 @@ class HumanLossController extends Controller
     public function update(Request $request, HumanLoss $humanLoss)
     {
         $rules = [
-            'name' => 'required',
-            'loss_type' => 'required',
+            'name' => 'required|string|max:255',
+            'loss_type' => 'required|in:died,missing,injured',
             'nominees' => 'array',
         ];
 
         if ($request->loss_type === 'died') {
-            $rules['nominees.*.name'] = 'required';
-            $rules['nominees.*.relation'] = 'required';
+            $rules['nominees.*.name'] = 'required|string';
+            $rules['nominees.*.relation'] = 'required|string';
         }
 
         $request->validate($rules);
@@ -90,15 +96,23 @@ class HumanLossController extends Controller
                 'address' => $request->address,
                 'state' => $request->state,
                 'district' => $request->district,
-                'compensation_amount' => $request->compensation_amount,
-                'compensation_received_date' => $request->compensation_received_date,
-                'compensation_status' => $request->compensation_status,
-                'nominee' => $request->nominees,
+
+                // ✅ DEFAULT SAFE HANDLING
+                'compensation_amount' => $request->filled('compensation_amount') ? $request->compensation_amount : 0,
+
+                'compensation_received_date' => $request->filled('compensation_received_date') ? $request->compensation_received_date : null,
+
+                'compensation_status' => $request->filled('compensation_status') ? $request->compensation_status : 'pending',
+
+                'nominee' => $request->nominees ?? [],
             ]);
 
             return redirect()->back()->with('success', 'Human Loss record updated successfully!');
         } catch (\Exception $e) {
-            return redirect()->back()->with('error', 'Something went wrong: '.$e->getMessage())->withInput();
+            return redirect()
+                ->back()
+                ->with('error', 'Something went wrong: ' . $e->getMessage())
+                ->withInput();
         }
     }
 }
