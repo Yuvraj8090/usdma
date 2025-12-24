@@ -2,30 +2,33 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Controllers\Controller;
 use App\Models\Equipment;
-use App\Http\Requests\StoreEquipmentRequest;
-use App\Http\Requests\UpdateEquipmentRequest;
 use App\Models\District;
 use App\Models\EquipmentCategory;
+use App\Models\Activity;
+use App\Models\ResourceType;
+use App\Http\Requests\StoreEquipmentRequest;
+use App\Http\Requests\UpdateEquipmentRequest;
 
 class EquipmentController extends Controller
 {
     public function index()
     {
-        $equipments = Equipment::with(['district', 'category'])
+        $equipments = Equipment::with(['district', 'category', 'activity', 'resourceType'])
             ->latest()
             ->paginate(10);
-            
+
         return view('admin.equipment.index', compact('equipments'));
     }
 
     public function create()
     {
-        $districts = District::get();
-        $categories = EquipmentCategory::get();
-        
-        return view('admin.equipment.create', compact('districts', 'categories'));
+        $districts = District::orderBy('name')->get();
+        $categories = EquipmentCategory::orderBy('name')->get();
+        $activities = Activity::orderBy('activity_name')->get();
+        $resourceTypes = ResourceType::orderBy('resource_type')->get();
+
+        return view('admin.equipment.create', compact('districts', 'categories', 'activities', 'resourceTypes'));
     }
 
     public function store(StoreEquipmentRequest $request)
@@ -35,22 +38,24 @@ class EquipmentController extends Controller
             return redirect()->route('admin.equipment.index')
                 ->with('success', 'Equipment created successfully.');
         } catch (\Exception $e) {
-            return back()->with('error', 'Error creating equipment: ' . $e->getMessage());
+            return back()->withInput()->with('error', 'Error creating equipment: ' . $e->getMessage());
         }
     }
 
     public function show(Equipment $equipment)
     {
-        $equipment->load(['district', 'category']);
+        $equipment->load(['district', 'category', 'activity', 'resourceType']);
         return view('admin.equipment.show', compact('equipment'));
     }
 
     public function edit(Equipment $equipment)
     {
-        $districts = District::get();
-        $categories = EquipmentCategory::get();
-        
-        return view('admin.equipment.edit', compact('equipment', 'districts', 'categories'));
+        $districts = District::orderBy('name')->get();
+        $categories = EquipmentCategory::orderBy('name')->get();
+        $activities = Activity::orderBy('name')->get();
+        $resourceTypes = ResourceType::orderBy('name')->get();
+
+        return view('admin.equipment.edit', compact('equipment', 'districts', 'categories', 'activities', 'resourceTypes'));
     }
 
     public function update(UpdateEquipmentRequest $request, Equipment $equipment)
@@ -60,7 +65,7 @@ class EquipmentController extends Controller
             return redirect()->route('admin.equipment.index')
                 ->with('success', 'Equipment updated successfully.');
         } catch (\Exception $e) {
-            return back()->with('error', 'Error updating equipment: ' . $e->getMessage());
+            return back()->withInput()->with('error', 'Error updating equipment: ' . $e->getMessage());
         }
     }
 

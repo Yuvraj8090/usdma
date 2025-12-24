@@ -128,7 +128,11 @@ Route::middleware(['auth:sanctum', config('jetstream.auth_session'), 'verified']
 
             // Meeting CRUD routes
             Route::resource('meetings', MeetingController::class);
+    Route::resource('activities', \App\Http\Controllers\Admin\ActivityController::class)
+        ->except(['create', 'show']);
 
+    Route::resource('resource-types', \App\Http\Controllers\Admin\ResourceTypeController::class)
+        ->except(['create', 'show']);
             // Daily Reports for Dhams
             Route::resource('district-reports', DistrictReportController::class);
 

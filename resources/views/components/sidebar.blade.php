@@ -36,7 +36,16 @@
                 request()->routeIs('admin.roles.*') ||
                 request()->routeIs('admin.daily_reports_fillable.*') ||
                 request()->routeIs('admin.accidental-reports-fillable.*') ||
-                request()->routeIs('admin.accidental_reports.*')">
+                request()->routeIs('admin.accidental_reports.*') ||
+                request()->routeIs('admin.districts.*') ||
+                request()->routeIs('admin.dhams.*') ||
+                request()->routeIs('admin.villages.*') ||
+                request()->routeIs('admin.tourist-visitor-details.*') ||
+                request()->routeIs('admin.incident-types.*') ||
+                request()->routeIs('admin.disaster-types.*') ||
+                request()->routeIs('admin.seasons.*') ||
+                request()->routeIs('admin.activities.*') ||
+                request()->routeIs('admin.resource-types.*')">
 
                 {{-- 👥 User Management --}}
                 <x-sidebar.dropdown icon="fas fa-users-cog" label="User Management" :active="request()->routeIs('admin.users.*') || request()->routeIs('admin.roles.*')">
@@ -82,7 +91,9 @@
                     request()->routeIs('admin.tourist-visitor-details.*') ||
                     request()->routeIs('admin.incident-types.*') ||
                     request()->routeIs('admin.disaster-types.*') ||
-                    request()->routeIs('admin.seasons.*')">
+                    request()->routeIs('admin.seasons.*') ||
+                    request()->routeIs('admin.activities.*') ||
+                    request()->routeIs('admin.resource-types.*')">
 
 
                     <x-sidebar.link route="admin.states.index" label="States" icon="fas fa-flag" :active="request()->routeIs('admin.states.*')" />
@@ -103,6 +114,12 @@
                         :active="request()->routeIs('admin.incident-types.*')" />
                     <x-sidebar.link route="admin.disaster-types.index" label="Disaster-Types" icon="fas fa-flag"
                         :active="request()->routeIs('admin.disaster-types.*')" />
+                    <x-sidebar.link route="admin.activities.index" label="Activities" icon="fas fa-running"
+                        :active="request()->routeIs('admin.activities.*')" />
+
+                    <x-sidebar.link route="admin.resource-types.index" label="Resource Types" icon="fas fa-boxes"
+                        :active="request()->routeIs('admin.resource-types.*')" />
+
                 </x-sidebar.dropdown>
 
                 {{-- 📅 Meetings --}}
@@ -126,7 +143,8 @@
                 <x-sidebar.link route="admin.equipment.index" label="Equipment" icon="fas fa-cogs" :active="request()->routeIs('admin.equipment.*')" />
                 <x-sidebar.link route="admin.equipment_categories.index" label="Equipment Categories"
                     icon="fas fa-layer-group" :active="request()->routeIs('admin.equipment_categories.*')" />
-                <x-sidebar.link route="admin.manpower.index" label="Manpower" icon="fas fa-users" :active="request()->routeIs('admin.manpower.*')" />
+                <x-sidebar.link route="admin.manpower.index" label="Manpower" icon="fas fa-users"
+                    :active="request()->routeIs('admin.manpower.*')" />
                 <x-sidebar.link route="admin.relief_material.index" label="Relief Materials" icon="fas fa-box-open"
                     :active="request()->routeIs('admin.relief_material.*')" />
                 <x-sidebar.link route="admin.deployments.index" label="Deployments" icon="fas fa-truck"
