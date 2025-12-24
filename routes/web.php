@@ -36,19 +36,12 @@ use App\Http\Controllers\Admin\DisasterTypeController;
 use Illuminate\Support\Facades\Artisan;
 
 Route::get('/deploy', function () {
-    $messages = [];
-
     Artisan::call('optimize');
-    $messages[] = 'Artisan optimize executed successfully.';
-
     Artisan::call('migrate', ['--force' => true]);
-    $messages[] = 'Database migrations executed successfully.';
 
-    Artisan::call('storage:link');
-    $messages[] = 'Storage linked successfully.';
-
-    return back()->with('success', implode(' | ', $messages));
+    return back()->with('success', 'Deploy completed');
 })->middleware('auth');
+
 
 Route::get('/en/{slug}', [PageController::class, 'showPage'])->name('page.show');
 Route::get('/hi/{slug}', [PageController::class, 'showPageHi'])->name('page.show.hi');
