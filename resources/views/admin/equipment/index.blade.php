@@ -62,10 +62,7 @@
                                         </span>
                                     </td>
                                     <td class="px-6 py-4 text-center flex justify-center gap-2">
-                                        <a href="{{ route('admin.equipment.show', $equipment) }}"
-                                           class="text-indigo-600 dark:text-indigo-400 hover:text-indigo-900 dark:hover:text-indigo-300">
-                                            <i class="fas fa-eye"></i>
-                                        </a>
+                                       
                                         <a href="{{ route('admin.equipment.edit', $equipment) }}"
                                            class="text-blue-600 dark:text-blue-400 hover:text-blue-900 dark:hover:text-blue-300">
                                             <i class="fas fa-edit"></i>
