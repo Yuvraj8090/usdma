@@ -33,6 +33,39 @@ use App\Http\Controllers\Admin\EquipmentCategoryController;
 use App\Http\Controllers\Admin\SeasonController;
 use App\Http\Controllers\Admin\DisasterTypeController;
 
+
+use Symfony\Component\Process\Process;
+use Symfony\Component\Process\Exception\ProcessFailedException;
+use Illuminate\Support\Facades\Artisan;
+
+Route::get('/deploy', function () {
+    $messages = [];
+
+    
+        $npm = new Process(['npm', 'run', 'build']);
+        $npm->run();
+
+        if (!$npm->isSuccessful()) {
+            throw new ProcessFailedException($npm);
+        }
+        $messages[] = "NPM build completed successfully.";
+
+        // 2. Run optimize
+        Artisan::call('optimize');
+        $messages[] = "Artisan optimize executed successfully.";
+
+        // 3. Run migrate
+        Artisan::call('migrate', ['--force' => true]);
+        $messages[] = "Database migrations executed successfully.";
+
+        // 4. Run storage link
+        Artisan::call('storage:link');
+        $messages[] = "Storage linked successfully.";
+
+        // Join all messages into one flash message
+        return back()->with('success', implode(' | ', $messages));
+    
+})->middleware('auth');
 Route::get('/en/{slug}', [PageController::class, 'showPage'])->name('page.show');
 Route::get('/hi/{slug}', [PageController::class, 'showPageHi'])->name('page.show.hi');
 Route::get('/{lang}/{slug}', [PageController::class, 'showLocalizedPage'])
