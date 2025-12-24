@@ -42,14 +42,7 @@ Route::get('/deploy', function () {
     $messages = [];
 
     
-        $npm = new Process(['npm', 'run', 'build']);
-        $npm->run();
-
-        if (!$npm->isSuccessful()) {
-            throw new ProcessFailedException($npm);
-        }
-        $messages[] = "NPM build completed successfully.";
-
+        
         // 2. Run optimize
         Artisan::call('optimize');
         $messages[] = "Artisan optimize executed successfully.";
