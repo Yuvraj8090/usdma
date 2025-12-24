@@ -2,48 +2,76 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Controllers\Controller;
 use App\Models\Equipment;
 use App\Http\Requests\StoreEquipmentRequest;
 use App\Http\Requests\UpdateEquipmentRequest;
+use App\Models\District;
+use App\Models\EquipmentCategory;
 
 class EquipmentController extends Controller
 {
     public function index()
     {
-        $equipment = Equipment::latest()->paginate(10);
-        return view('equipment.index', compact('equipment'));
+        $equipments = Equipment::with(['district', 'category'])
+            ->latest()
+            ->paginate(10);
+            
+        return view('admin.equipment.index', compact('equipments'));
     }
 
     public function create()
     {
-        return view('equipment.create');
+        $districts = District::get();
+        $categories = EquipmentCategory::get();
+        
+        return view('admin.equipment.create', compact('districts', 'categories'));
     }
 
     public function store(StoreEquipmentRequest $request)
     {
-        Equipment::create($request->validated());
-        return redirect()->route('equipment.index')->with('success', 'Equipment created successfully.');
+        try {
+            Equipment::create($request->validated());
+            return redirect()->route('admin.equipment.index')
+                ->with('success', 'Equipment created successfully.');
+        } catch (\Exception $e) {
+            return back()->with('error', 'Error creating equipment: ' . $e->getMessage());
+        }
     }
 
     public function show(Equipment $equipment)
     {
-        return view('equipment.show', compact('equipment'));
+        $equipment->load(['district', 'category']);
+        return view('admin.equipment.show', compact('equipment'));
     }
 
     public function edit(Equipment $equipment)
     {
-        return view('equipment.edit', compact('equipment'));
+        $districts = District::get();
+        $categories = EquipmentCategory::get();
+        
+        return view('admin.equipment.edit', compact('equipment', 'districts', 'categories'));
     }
 
     public function update(UpdateEquipmentRequest $request, Equipment $equipment)
     {
-        $equipment->update($request->validated());
-        return redirect()->route('equipment.index')->with('success', 'Equipment updated successfully.');
+        try {
+            $equipment->update($request->validated());
+            return redirect()->route('admin.equipment.index')
+                ->with('success', 'Equipment updated successfully.');
+        } catch (\Exception $e) {
+            return back()->with('error', 'Error updating equipment: ' . $e->getMessage());
+        }
     }
 
     public function destroy(Equipment $equipment)
     {
-        $equipment->delete();
-        return redirect()->route('equipment.index')->with('success', 'Equipment deleted successfully.');
+        try {
+            $equipment->delete();
+            return redirect()->route('admin.equipment.index')
+                ->with('success', 'Equipment deleted successfully.');
+        } catch (\Exception $e) {
+            return back()->with('error', 'Error deleting equipment: ' . $e->getMessage());
+        }
     }
 }

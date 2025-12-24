@@ -8,16 +8,19 @@ class StoreEquipmentRequest extends FormRequest
 {
     public function authorize(): bool
     {
-        return true; // add auth logic if needed
+        return true;
     }
 
     public function rules(): array
     {
         return [
-            'name'     => 'required|string|max:255',
-            'type'     => 'nullable|string|max:255',
-            'status'   => 'nullable|string|in:available,in-use,maintenance',
-            'quantity' => 'required|integer|min:1',
+            'name' => 'required|string|max:255',
+            'code' => 'required|string|max:100|unique:equipments,code',
+            'category_id' => 'nullable|exists:equipment_categories,id',
+            'district_id' => 'nullable|exists:districts,id',
+            'quantity' => 'required|integer|min:0',
+            'remarks' => 'nullable|string',
+            'is_active' => 'boolean'
         ];
     }
 }

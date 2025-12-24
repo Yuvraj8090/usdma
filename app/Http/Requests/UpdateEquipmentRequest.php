@@ -13,11 +13,16 @@ class UpdateEquipmentRequest extends FormRequest
 
     public function rules(): array
     {
+        $equipmentId = $this->route('equipment')->id;
+        
         return [
-            'name'     => 'sometimes|required|string|max:255',
-            'type'     => 'nullable|string|max:255',
-            'status'   => 'nullable|string|in:available,in-use,maintenance',
-            'quantity' => 'sometimes|required|integer|min:1',
+            'name' => 'required|string|max:255',
+            'code' => 'required|string|max:100|unique:equipments,code,' . $equipmentId,
+            'category_id' => 'nullable|exists:equipment_categories,id',
+            'district_id' => 'nullable|exists:districts,id',
+            'quantity' => 'required|integer|min:0',
+            'remarks' => 'nullable|string',
+            'is_active' => 'boolean'
         ];
     }
 }
