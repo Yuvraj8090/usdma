@@ -33,32 +33,23 @@ use App\Http\Controllers\Admin\EquipmentCategoryController;
 use App\Http\Controllers\Admin\SeasonController;
 use App\Http\Controllers\Admin\DisasterTypeController;
 
-
-use Symfony\Component\Process\Process;
-use Symfony\Component\Process\Exception\ProcessFailedException;
 use Illuminate\Support\Facades\Artisan;
 
 Route::get('/deploy', function () {
     $messages = [];
 
-    
-        
-        // 2. Run optimize
-        Artisan::call('optimize');
-        $messages[] = "Artisan optimize executed successfully.";
+    Artisan::call('optimize');
+    $messages[] = 'Artisan optimize executed successfully.';
 
-        // 3. Run migrate
-        Artisan::call('migrate', ['--force' => true]);
-        $messages[] = "Database migrations executed successfully.";
+    Artisan::call('migrate', ['--force' => true]);
+    $messages[] = 'Database migrations executed successfully.';
 
-        // 4. Run storage link
-        Artisan::call('storage:link');
-        $messages[] = "Storage linked successfully.";
+    Artisan::call('storage:link');
+    $messages[] = 'Storage linked successfully.';
 
-        // Join all messages into one flash message
-        return back()->with('success', implode(' | ', $messages));
-    
+    return back()->with('success', implode(' | ', $messages));
 })->middleware('auth');
+
 Route::get('/en/{slug}', [PageController::class, 'showPage'])->name('page.show');
 Route::get('/hi/{slug}', [PageController::class, 'showPageHi'])->name('page.show.hi');
 Route::get('/{lang}/{slug}', [PageController::class, 'showLocalizedPage'])
@@ -72,11 +63,7 @@ Route::get('/admin', function () {
     return Auth::check() ? redirect()->route('dashboard') : redirect()->route('login');
 });
 Route::get('/admin/get-disaster-types/{incidentType}', function ($incidentType) {
-    return \App\Models\DisasterType::where('incident_type_id', $incidentType)
-        ->where('is_active', true)
-        ->select('id', 'name')
-        ->orderBy('name')
-        ->get();
+    return \App\Models\DisasterType::where('incident_type_id', $incidentType)->where('is_active', true)->select('id', 'name')->orderBy('name')->get();
 })->middleware('auth');
 
 Route::middleware(['auth:sanctum', config('jetstream.auth_session'), 'verified'])->group(function () {
@@ -180,32 +167,26 @@ Route::middleware(['auth:sanctum', config('jetstream.auth_session'), 'verified']
             Route::put('/pages/edit/{id}', [PageController::class, 'updatePage'])->name('pages.update');
             Route::post('/pages/delete/{id}', [PageController::class, 'deletePage'])->name('pages.delete');
 
+            Route::get('/incidents/{incident}/human-loss/create', [HumanLossController::class, 'create'])->name('human_loss.create');
+            Route::post('/incidents/{incident}/human-loss/store', [HumanLossController::class, 'store'])->name('human_loss.store');
+            // routes/web.php
+            Route::get('human-loss/nominee-row', [HumanLossController::class, 'nomineeRow'])->name('human_loss.nominee_row');
 
-Route::get('/incidents/{incident}/human-loss/create', [HumanLossController::class, 'create'])->name('human_loss.create');
-Route::post('/incidents/{incident}/human-loss/store', [HumanLossController::class, 'store'])->name('human_loss.store');
-// routes/web.php
-Route::get('human-loss/nominee-row', [HumanLossController::class, 'nomineeRow'])
-    ->name('human_loss.nominee_row');
- 
-Route::prefix('human-loss')->name('human_loss.')->group(function () {
+            Route::prefix('human-loss')
+                ->name('human_loss.')
+                ->group(function () {
+                    // Show edit form for a Human Loss record
+                    Route::get('/{humanLoss}/edit', [HumanLossController::class, 'edit'])->name('edit');
 
-
-    // Show edit form for a Human Loss record
-    Route::get('/{humanLoss}/edit', [HumanLossController::class, 'edit'])->name('edit');
-
-    // Update a Human Loss record
-    Route::put('/{humanLoss}', [HumanLossController::class, 'update'])->name('update');
-
-});
-Route::get('/get-districts/{state}', function ($stateId) {
-    return \App\Models\District::where('state_id', $stateId)
-        ->where('is_active', true)
-        ->orderBy('name')
-        ->get(['id', 'name']);
-})->name('get.districts');
-
-
-
+                    // Update a Human Loss record
+                    Route::put('/{humanLoss}', [HumanLossController::class, 'update'])->name('update');
+                });
+            Route::get('/get-districts/{state}', function ($stateId) {
+                return \App\Models\District::where('state_id', $stateId)
+                    ->where('is_active', true)
+                    ->orderBy('name')
+                    ->get(['id', 'name']);
+            })->name('get.districts');
 
             // CRUD routes for Roles and Users under /admin
             Route::resource('roles', RoleController::class);
