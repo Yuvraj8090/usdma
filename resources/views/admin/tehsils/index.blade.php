@@ -13,7 +13,7 @@
             </div>
 
             <a href="{{ route('admin.tehsils.create') }}"
-               class="inline-flex items-center px-4 py-2 bg-gradient-to-r from-indigo-500 to-purple-500 
+               class="inline-flex items-center px-4 py-2 bg-gray-700 
                border border-transparent rounded-lg font-semibold text-white uppercase tracking-widest 
                hover:from-indigo-600 hover:to-purple-600 transition-all duration-200 shadow-lg">
                 <i class="fas fa-plus-circle mr-2"></i> Create New Tehsil
@@ -21,7 +21,7 @@
 
             <div x-data="{ open: false }">
                 <button @click="open = !open"
-                        class="inline-flex items-center px-4 py-2 bg-gradient-to-r from-indigo-500 to-purple-500 
+                        class="inline-flex items-center px-4 py-2 bg-gray-700 
                         border border-transparent rounded-lg font-semibold text-white uppercase tracking-widest 
                         hover:from-indigo-600 hover:to-purple-600 transition-all duration-200 shadow-lg">
                     <span><i class="fas fa-filter mr-2"></i> Filters</span>
@@ -70,7 +70,7 @@
 
                         <div>
                             <button type="submit"
-                                    class="w-full px-4 py-2 bg-gradient-to-r from-indigo-500 to-purple-500 text-white rounded-lg shadow">
+                                    class="w-full px-4 py-2 bg-gray-700 text-white rounded-lg shadow">
                                 <i class="fas fa-filter mr-1"></i> Apply
                             </button>
                         </div>
@@ -90,7 +90,7 @@
 
 
         <div class="bg-white dark:bg-gray-800 rounded-xl shadow-lg overflow-hidden border border-gray-200 dark:border-gray-700">
-            <div class="px-6 py-4 bg-gradient-to-r from-indigo-500 to-purple-600">
+            <div class="px-6 py-4 bg-gray-700">
                 <h3 class="text-lg font-medium text-white flex items-center">
                     <i class="fas fa-map-marker-alt mr-2"></i> All Tehsils
                 </h3>

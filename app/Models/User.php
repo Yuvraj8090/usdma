@@ -2,7 +2,6 @@
 
 namespace App\Models;
 
-use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
@@ -12,24 +11,24 @@ use Laravel\Sanctum\HasApiTokens;
 
 class User extends Authenticatable
 {
-    use HasApiTokens, HasFactory, HasProfilePhoto, Notifiable, TwoFactorAuthenticatable;
+    use HasApiTokens;
+    use HasFactory;
+    use HasProfilePhoto;
+    use Notifiable;
+    use TwoFactorAuthenticatable;
 
     /**
-     * The attributes that are mass assignable.
-     *
-     * @var array<int, string>
+     * Mass assignable attributes
      */
     protected $fillable = [
         'name',
         'email',
         'password',
-        'role_id', // ✅ allow mass assignment of role_id
+        'role_id',
     ];
 
     /**
-     * The attributes that should be hidden for serialization.
-     *
-     * @var array<int, string>
+     * Hidden attributes
      */
     protected $hidden = [
         'password',
@@ -39,33 +38,27 @@ class User extends Authenticatable
     ];
 
     /**
-     * The accessors to append to the model's array form.
-     *
-     * @var array<int, string>
+     * Attribute casting
+     */
+    protected $casts = [
+        'email_verified_at' => 'datetime',
+        'last_service_date' => 'date',
+        'password' => 'hashed',
+    ];
+
+    /**
+     * Accessors appended to model
      */
     protected $appends = [
         'profile_photo_url',
     ];
-public function districts()
-{
-    return $this->belongsToMany(District::class, 'district_user');
-}
+
+    /* ============================
+     | Relationships
+     |============================ */
 
     /**
-     * Get the attributes that should be cast.
-     *
-     * @return array<string, string>
-     */
-    protected function casts(): array
-    {
-        return [
-            'email_verified_at' => 'datetime',
-            'password' => 'hashed',
-        ];
-    }
-
-    /**
-     * Relation: User belongs to Role
+     * User belongs to a Role
      */
     public function role()
     {
@@ -73,10 +66,22 @@ public function districts()
     }
 
     /**
-     * Quick check if user is Admin
+     * User belongs to many Districts
+     */
+    public function districts()
+    {
+        return $this->belongsToMany(District::class, 'district_user');
+    }
+
+    /* ============================
+     | Helpers
+     |============================ */
+
+    /**
+     * Check if user is Admin
      */
     public function isAdmin(): bool
     {
-        return $this->role && $this->role->name === 'Admin';
+        return $this->role?->name === 'Admin';
     }
 }

@@ -5,7 +5,7 @@
                 Create Setting
             </h2>
             <a href="{{ route('admin.settings.index') }}"
-               class="inline-flex items-center px-4 py-2 bg-gradient-to-r from-indigo-500 to-purple-500 text-white font-semibold text-sm rounded-lg shadow hover:from-indigo-600 hover:to-purple-600 transition">
+               class="inline-flex items-center px-4 py-2 bg-gray-700 text-white font-semibold text-sm rounded-lg shadow hover:from-indigo-600 hover:to-purple-600 transition">
                 <i class="fas fa-arrow-left mr-2"></i> Back to Settings
             </a>
         </div>
@@ -78,7 +78,7 @@
 
                     <div class="flex justify-end">
                         <button type="submit"
-                                class="inline-flex items-center px-5 py-2 bg-gradient-to-r from-green-500 to-emerald-500 text-white font-semibold text-sm rounded-lg shadow hover:from-green-600 hover:to-emerald-600 transition">
+                                class="inline-flex items-center px-5 py-2 bg-gray-700 text-white font-semibold text-sm rounded-lg shadow hover:from-green-600 hover:to-emerald-600 transition">
                             <i class="fas fa-plus-circle mr-2"></i> Create Setting
                         </button>
                     </div>

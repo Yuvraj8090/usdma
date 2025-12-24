@@ -76,7 +76,7 @@
                 <!-- Submit Button -->
                 <div class="mt-6">
                     <button type="submit" 
-                            class="px-4 py-2 bg-gradient-to-r from-indigo-500 to-purple-500 text-white rounded-lg font-semibold hover:from-indigo-600 hover:to-purple-600 transition-all duration-200 shadow">
+                            class="px-4 py-2 bg-gray-700 text-white rounded-lg font-semibold hover:from-indigo-600 hover:to-purple-600 transition-all duration-200 shadow">
                         Create Meeting
                     </button>
                 </div>

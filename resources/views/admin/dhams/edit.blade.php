@@ -98,7 +98,7 @@
                 <div class="mt-4">
                     <label class="inline-flex items-center">
                         <input type="checkbox" name="is_active" value="1"
-                            class="rounded border-gray-300 text-indigo-600 shadow-sm focus:ring-indigo-500"
+                            class="rounded border-gray-300 text-gray-700 shadow-sm focus:ring-indigo-500"
                             {{ old('is_active', $dham->is_active) ? 'checked' : '' }}>
                         <span class="ml-2 text-gray-700 dark:text-gray-300">Active</span>
                     </label>
@@ -107,7 +107,7 @@
                 <div class="mt-4">
                     <label class="inline-flex items-center">
                         <input type="checkbox" name="is_winter" value="1"
-                            class="rounded border-gray-300 text-indigo-600 shadow-sm focus:ring-indigo-500"
+                            class="rounded border-gray-300 text-gray-700 shadow-sm focus:ring-indigo-500"
                             {{ old('is_winter', $dham->is_winter) ? 'checked' : '' }}>
                         <span class="ml-2 text-gray-700 dark:text-gray-300">Winter Dham</span>
                     </label>
@@ -120,7 +120,7 @@
                         Cancel
                     </a>
                     <button type="submit"
-                        class="px-4 py-2 bg-gradient-to-r from-indigo-500 to-purple-500 text-white rounded-lg shadow hover:from-indigo-600 hover:to-purple-600 transition">
+                        class="px-4 py-2 bg-gray-700 text-white rounded-lg shadow hover:from-indigo-600 hover:to-purple-600 transition">
                         Update
                     </button>
                 </div>

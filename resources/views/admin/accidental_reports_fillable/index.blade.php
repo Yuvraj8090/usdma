@@ -14,7 +14,7 @@
                 <i class="fas fa-car-crash mr-1"></i> Manage Categories (Human, Vehicle, Property…)
             </div>
             <a href="{{ route('admin.accidental-reports-fillable.create') }}"
-               class="inline-flex items-center px-4 py-2 bg-gradient-to-r from-indigo-500 to-purple-500 border border-transparent rounded-lg font-semibold text-white uppercase tracking-widest hover:from-indigo-600 hover:to-purple-600 transition-all duration-200 shadow-lg">
+               class="inline-flex items-center px-4 py-2 bg-gray-700 border border-transparent rounded-lg font-semibold text-white uppercase tracking-widest hover:from-indigo-600 hover:to-purple-600 transition-all duration-200 shadow-lg">
                 <i class="fas fa-plus-circle mr-2"></i> Create Category
             </a>
         </div>
@@ -31,7 +31,7 @@
 
         <!-- DataTable Card -->
         <div class="bg-white dark:bg-gray-800 rounded-xl shadow-lg overflow-hidden border border-gray-200">
-            <div class="px-6 py-4 bg-gradient-to-r from-indigo-500 to-purple-600">
+            <div class="px-6 py-4 bg-gray-700">
                 <h3 class="text-lg font-medium text-white flex items-center">
                     <i class="fas fa-list mr-2"></i> All Categories
                 </h3>

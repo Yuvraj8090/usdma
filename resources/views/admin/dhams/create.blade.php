@@ -104,7 +104,7 @@
                 {{-- Submit --}}
                 <div class="mt-6">
                     <button type="submit"
-                            class="px-6 py-2 bg-gradient-to-r from-indigo-500 to-purple-600 text-white rounded-lg shadow hover:from-indigo-600 hover:to-purple-700">
+                            class="px-6 py-2 bg-gray-700 text-white rounded-lg shadow hover:from-indigo-600 hover:to-purple-700">
                         {{ isset($dham) ? 'Update' : 'Save' }}
                     </button>
                 </div>

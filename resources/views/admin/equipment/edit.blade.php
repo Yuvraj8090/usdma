@@ -12,7 +12,7 @@
             <div class="bg-white dark:bg-gray-800 rounded-xl shadow-lg overflow-hidden border border-gray-200 dark:border-gray-700">
 
                 <!-- Card Header -->
-                <div class="px-6 py-4 bg-gradient-to-r from-indigo-500 to-purple-600">
+                <div class="px-6 py-4 bg-gray-700">
                     <h3 class="text-lg font-medium text-white flex items-center">
                         <i class="fas fa-edit mr-2"></i> Update Equipment
                     </h3>
@@ -160,7 +160,7 @@
                         <div class="mb-6 flex items-center">
                             <input type="checkbox" name="is_active" id="is_active" value="1"
                                 {{ old('is_active', true) ? 'checked' : '' }}
-                                class="rounded border-gray-300 dark:border-gray-600 text-indigo-600 focus:ring-indigo-500">
+                                class="rounded border-gray-300 dark:border-gray-600 text-gray-700 focus:ring-indigo-500">
                             <label for="is_active" class="ml-2 text-gray-700 dark:text-gray-300">Active</label>
                         </div>
 
@@ -173,7 +173,7 @@
                             </a>
 
                             <button type="submit"
-                                    class="px-5 py-2.5 bg-gradient-to-r from-indigo-500 to-purple-500 text-white rounded-lg shadow hover:from-indigo-600 hover:to-purple-600 transition">
+                                    class="px-5 py-2.5 bg-gray-700 text-white rounded-lg shadow hover:from-indigo-600 hover:to-purple-600 transition">
                                 <i class="fas fa-save mr-2"></i> Update Equipment
                             </button>
                         </div>

@@ -7,37 +7,55 @@ use App\Models\AccidentalReport;
 use App\Models\AccidentalReportFillable;
 use App\Models\District;
 use Illuminate\Http\Request;
+use Yajra\DataTables\Facades\DataTables;
+use Carbon\Carbon;
 
 class AccidentalReportController extends Controller
 {
-   public function index(Request $request)
-{
-    $query = AccidentalReport::with(['district', 'fillableCategory'])
-        ->selectRaw('district_id, fillable_id, report_date, SUM(count) as total_count')
-        ->groupBy('district_id', 'fillable_id', 'report_date');
+    public function index(Request $request)
+    {
+        if ($request->ajax()) {
+            $parents = AccidentalReportFillable::with('children')->whereNull('parent_id')->get();
 
-    if ($request->filled('district_id')) {
-        $query->where('district_id', $request->district_id);
+            $query = AccidentalReport::with(['district'])
+                ->selectRaw('district_id, fillable_id, report_date, SUM(count) as total_count')
+                ->groupBy('district_id', 'fillable_id', 'report_date');
+
+            if ($request->district_id) {
+                $query->where('district_id', $request->district_id);
+            }
+
+            if ($request->report_date) {
+                $query->whereDate('report_date', $request->report_date);
+            }
+
+            $reports = $query->get()->groupBy(fn($r) => $r->district_id . '_' . $r->report_date);
+
+            $rows = [];
+
+            foreach ($reports as $group) {
+                $row = [
+                    'district' => $group->first()->district->name ?? '-',
+                    'date' => Carbon::parse($group->first()->report_date)->format('Y-m-d'),
+                ];
+
+                foreach ($parents as $parent) {
+                    foreach ($parent->children as $child) {
+                        $row['child_' . $child->id] = $group->where('fillable_id', $child->id)->sum('total_count') ?: '-';
+                    }
+                }
+
+                $rows[] = $row;
+            }
+
+            return DataTables::of($rows)->make(true);
+        }
+
+        $districts = District::all();
+        $parents = AccidentalReportFillable::with('children')->whereNull('parent_id')->get();
+
+        return view('admin.accidental_reports.index', compact('districts', 'parents'));
     }
-
-    if ($request->filled('fillable_id')) {
-        $query->where('fillable_id', $request->fillable_id);
-    }
-
-    if ($request->filled('report_date')) {
-        $query->whereDate('report_date', $request->report_date);
-    }
-
-    $reports = $query->orderBy('report_date', 'desc')->paginate(15);
-    $districts = District::all();
-    $parents = AccidentalReportFillable::with('children')->whereNull('parent_id')->get();
-
-    // Pass the header here
-    $header = 'Add Incidents';
-
-    return view('admin.accidental_reports.index', compact('reports', 'districts', 'parents', 'header'));
-}
-
 
     /**
      * Show form to create a new report.

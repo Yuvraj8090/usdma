@@ -1,7 +1,7 @@
 <x-app-layout>
     <x-slot name="header">
         <div class="flex items-center space-x-4">
-            <a href="{{ route('admin.navbar-items.index') }}" class="text-indigo-600 dark:text-indigo-400 hover:text-indigo-800 dark:hover:text-indigo-200 transition-colors">
+            <a href="{{ route('admin.navbar-items.index') }}" class="text-gray-700 dark:text-white hover:text-indigo-800 dark:hover:text-indigo-200 transition-colors">
                 <i class="fas fa-arrow-left"></i>
             </a>
             <h2 class="font-semibold text-xl text-gray-800 dark:text-gray-200 leading-tight">
@@ -12,7 +12,7 @@
 
     <div class="py-6 container mx-auto px-4 sm:px-6 lg:px-8">
         <div class="bg-white dark:bg-gray-800 rounded-xl shadow-lg overflow-hidden border border-gray-200 dark:border-gray-700">
-            <div class="px-6 py-4 bg-gradient-to-r from-indigo-500 to-purple-600">
+            <div class="px-6 py-4 bg-gray-700">
                 <h3 class="text-lg font-medium text-white flex items-center">
                     <i class="fas fa-edit mr-2"></i> Edit Navigation Item
                 </h3>
@@ -25,7 +25,7 @@
                         <!-- Title Field -->
                         <div class="space-y-2">
                             <label for="title" class="block text-sm font-medium text-gray-700 dark:text-gray-300">
-                                <span class="text-indigo-600 dark:text-indigo-400">*</span> Title
+                                <span class="text-gray-700 dark:text-white">*</span> Title
                             </label>
                             <input type="text" name="title" id="title" required
                                 class="block w-full px-4 py-2 rounded-lg border border-gray-300 dark:border-gray-600 focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 dark:bg-gray-700 dark:text-white transition duration-150"
@@ -36,7 +36,7 @@
                         <!-- Slug Field -->
                         <div class="space-y-2">
                             <label for="slug" class="block text-sm font-medium text-gray-700 dark:text-gray-300">
-                                <span class="text-indigo-600 dark:text-indigo-400">*</span> Slug
+                                <span class="text-gray-700 dark:text-white">*</span> Slug
                             </label>
                             <div class="relative">
                                 <input type="text" name="slug" id="slug" required
@@ -44,7 +44,7 @@
                                     value="{{ $navbarItem->slug }}"
                                     placeholder="home">
                                 <button type="button" onclick="generateSlug()"
-                                    class="absolute right-2 top-2 text-indigo-600 dark:text-indigo-400 hover:text-indigo-800 dark:hover:text-indigo-200">
+                                    class="absolute right-2 top-2 text-gray-700 dark:text-white hover:text-indigo-800 dark:hover:text-indigo-200">
                                     <i class="fas fa-sync-alt"></i>
                                 </button>
                             </div>
@@ -69,7 +69,7 @@
                             <div class="flex items-center">
                                 <input type="hidden" name="is_dropdown" value="0">
                                 <input type="checkbox" name="is_dropdown" id="is_dropdown" value="1"
-                                    class="h-4 w-4 text-indigo-600 focus:ring-indigo-500 border-gray-300 dark:border-gray-600 dark:bg-gray-700 rounded transition duration-150"
+                                    class="h-4 w-4 text-gray-700 focus:ring-indigo-500 border-gray-300 dark:border-gray-600 dark:bg-gray-700 rounded transition duration-150"
                                     {{ $navbarItem->is_dropdown ? 'checked' : '' }}>
                                 <label for="is_dropdown" class="ml-2 block text-sm text-gray-700 dark:text-gray-300">
                                     Is Dropdown
@@ -92,7 +92,7 @@
                             <div class="flex items-center">
                                 <input type="hidden" name="is_active" value="0">
                                 <input type="checkbox" name="is_active" id="is_active" value="1"
-                                    class="h-4 w-4 text-indigo-600 focus:ring-indigo-500 border-gray-300 dark:border-gray-600 dark:bg-gray-700 rounded transition duration-150"
+                                    class="h-4 w-4 text-gray-700 focus:ring-indigo-500 border-gray-300 dark:border-gray-600 dark:bg-gray-700 rounded transition duration-150"
                                     {{ $navbarItem->is_active ? 'checked' : '' }}>
                                 <label for="is_active" class="ml-2 block text-sm text-gray-700 dark:text-gray-300">
                                     Is Active
@@ -103,7 +103,7 @@
                             <div class="flex items-center">
                                 <input type="hidden" name="is_footer" value="0">
                                 <input type="checkbox" name="is_footer" id="is_footer" value="1"
-                                    class="h-4 w-4 text-indigo-600 focus:ring-indigo-500 border-gray-300 dark:border-gray-600 dark:bg-gray-700 rounded transition duration-150"
+                                    class="h-4 w-4 text-gray-700 focus:ring-indigo-500 border-gray-300 dark:border-gray-600 dark:bg-gray-700 rounded transition duration-150"
                                     {{ $navbarItem->is_footer ? 'checked' : '' }}>
                                 <label for="is_footer" class="ml-2 block text-sm text-gray-700 dark:text-gray-300">
                                     Show in Footer

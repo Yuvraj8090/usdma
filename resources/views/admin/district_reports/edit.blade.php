@@ -7,7 +7,7 @@
 
     <div class="py-6 container mx-auto px-4 sm:px-6 lg:px-8">
         <div class="bg-white dark:bg-gray-800 rounded-xl shadow-lg overflow-hidden border border-gray-200 dark:border-gray-700">
-            <div class="px-6 py-4 bg-gradient-to-r from-indigo-500 to-purple-600">
+            <div class="px-6 py-4 bg-gray-700">
                 <h3 class="text-lg font-medium text-white flex items-center">
                     <i class="fas fa-edit mr-2"></i> Edit Report
                 </h3>
@@ -52,7 +52,7 @@
                     <a href="{{ route('admin.district-reports.index') }}"
                         class="px-4 py-2 bg-gray-500 text-white rounded-lg hover:bg-gray-600 mr-2">Cancel</a>
                     <button type="submit"
-                        class="px-6 py-2 bg-indigo-600 text-white rounded-lg shadow-lg hover:bg-indigo-700">
+                        class="px-6 py-2 bg-gray-700 text-white rounded-lg shadow-lg hover:bg-indigo-700">
                         Update
                     </button>
                 </div>

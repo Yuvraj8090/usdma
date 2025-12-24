@@ -57,7 +57,7 @@
                     <textarea name="remarks" class="w-full border rounded px-3 py-2" rows="3"></textarea>
                 </div>
 
-                <button type="submit" class="px-4 py-2 bg-indigo-500 text-white rounded shadow hover:bg-indigo-600">Create Deployment</button>
+                <button type="submit" class="px-4 py-2 bg-indigo-500 text-white rounded shadow hover:bg-gray-700">Create Deployment</button>
             </form>
         </div>
     </div>

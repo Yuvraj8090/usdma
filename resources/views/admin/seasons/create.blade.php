@@ -63,7 +63,7 @@
                     
 
                     <button type="submit"
-                            class="inline-flex items-center px-4 py-2 bg-gradient-to-r from-indigo-500 to-purple-600 text-white rounded-lg font-semibold hover:from-indigo-600 hover:to-purple-700 transition-all duration-200 shadow">
+                            class="inline-flex items-center px-4 py-2 bg-gray-700 text-white rounded-lg font-semibold hover:from-indigo-600 hover:to-purple-700 transition-all duration-200 shadow">
                         <i class="fas fa-save mr-2"></i> Save Season
                     </button>
                 </div>

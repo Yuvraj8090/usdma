@@ -42,7 +42,7 @@
 
                 <div class="flex justify-end space-x-3">
                     <a href="{{ route('admin.road-closed-fillable.index') }}" class="px-4 py-2 bg-gray-500 text-white rounded-lg shadow hover:bg-gray-600">Cancel</a>
-                    <button type="submit" class="px-4 py-2 bg-gradient-to-r from-green-500 to-emerald-500 text-white rounded-lg shadow hover:from-green-600 hover:to-emerald-600">Update</button>
+                    <button type="submit" class="px-4 py-2 bg-gray-700 text-white rounded-lg shadow hover:from-green-600 hover:to-emerald-600">Update</button>
                 </div>
             </form>
         </div>

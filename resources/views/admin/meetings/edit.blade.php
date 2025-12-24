@@ -71,7 +71,7 @@
                         <label class="block text-sm font-medium text-gray-700 dark:text-gray-200">File / Document</label>
                         @if($meeting->file_url)
                             <div class="mb-2">
-                                <a href="{{ asset('storage/'.$meeting->file_url) }}" target="_blank" class="text-indigo-600 hover:underline">Current File</a>
+                                <a href="{{ asset('storage/'.$meeting->file_url) }}" target="_blank" class="text-gray-700 hover:underline">Current File</a>
                             </div>
                         @endif
                         <input type="file" name="file_url" 

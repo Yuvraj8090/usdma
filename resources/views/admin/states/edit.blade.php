@@ -20,7 +20,7 @@
 
                 <div class="flex items-center space-x-3">
                     <input type="checkbox" name="is_active" value="1" {{ old('is_active', $state->is_active) ? 'checked' : '' }}
-                        class="h-4 w-4 text-indigo-600 border-gray-300 rounded">
+                        class="h-4 w-4 text-gray-700 border-gray-300 rounded">
                     <label class="text-sm text-gray-700 dark:text-gray-300">Active</label>
                 </div>
 
@@ -30,7 +30,7 @@
                         Cancel
                     </a>
                     <button type="submit"
-                        class="px-4 py-2 bg-gradient-to-r from-indigo-500 to-purple-500 text-white font-semibold rounded-lg shadow hover:from-indigo-600 hover:to-purple-600 transition">
+                        class="px-4 py-2 bg-gray-700 text-white font-semibold rounded-lg shadow hover:from-indigo-600 hover:to-purple-600 transition">
                         Update
                     </button>
                 </div>

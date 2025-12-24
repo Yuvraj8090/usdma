@@ -42,7 +42,7 @@
             class="fixed inset-y-0 left-0 z-30 w-64 bg-white dark:bg-gray-800 border-r dark:border-gray-700 overflow-y-auto transform transition-transform duration-200 ease-in-out lg:translate-x-0 lg:static lg:inset-0 shadow-lg">
             <div class="h-16 flex items-center justify-between px-4 border-b dark:border-gray-700">
                 <a href="{{ route('dashboard') }}"
-                    class="text-xl font-bold text-indigo-600 dark:text-indigo-400 flex items-center">
+                    class="text-xl font-bold text-gray-700 dark:text-white flex items-center">
                     <i class="fas fa-cube mr-2"></i>
                     {{ allsettings('admin.title') }}
                 </a>

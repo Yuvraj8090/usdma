@@ -62,7 +62,7 @@
                     <textarea name="remarks" class="w-full border rounded px-3 py-2" rows="3">{{ $deployment->remarks }}</textarea>
                 </div>
 
-                <button type="submit" class="px-4 py-2 bg-indigo-500 text-white rounded shadow hover:bg-indigo-600">Update Deployment</button>
+                <button type="submit" class="px-4 py-2 bg-indigo-500 text-white rounded shadow hover:bg-gray-700">Update Deployment</button>
             </form>
         </div>
     </div>

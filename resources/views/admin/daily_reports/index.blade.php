@@ -14,7 +14,7 @@
                 <i class="fas fa-chart-bar mr-1"></i> Track daily disaster reports
             </div>
             <a href="{{ route('admin.daily_reports.create') }}"
-               class="inline-flex items-center px-4 py-2 bg-gradient-to-r from-indigo-500 to-purple-500 rounded-lg font-semibold text-white hover:from-indigo-600 hover:to-purple-600 shadow-lg">
+               class="inline-flex items-center px-4 py-2 bg-gray-700 rounded-lg font-semibold text-white hover:from-indigo-600 hover:to-purple-600 shadow-lg">
                 <i class="fas fa-plus-circle mr-2"></i> Add Report
             </a>
         </div>
@@ -31,7 +31,7 @@
 
         <!-- DataTable Card -->
         <div class="bg-white dark:bg-gray-800 rounded-xl shadow-lg overflow-hidden border">
-            <div class="px-6 py-4 bg-gradient-to-r from-indigo-500 to-purple-600">
+            <div class="px-6 py-4 bg-gray-700">
                 <h3 class="text-lg font-medium text-white flex items-center">
                     <i class="fas fa-database mr-2"></i> All Reports
                 </h3>

@@ -1,5 +1,5 @@
 <x-app-layout>
-    <div class="min-h-screen p-6 bg-gray-100 dark:bg-gray-900">
+    <div class="min-h-screen p-6 ">
         <div class="w-full">
             <div class="bg-white dark:bg-gray-800 shadow-lg rounded-lg overflow-hidden">
 

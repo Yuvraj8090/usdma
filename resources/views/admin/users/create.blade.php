@@ -9,7 +9,7 @@
 
     <div class="py-6 container mx-auto px-4 sm:px-6 lg:px-8">
         <div class="bg-white dark:bg-gray-800 rounded-xl shadow-lg overflow-hidden border border-gray-200 dark:border-gray-700">
-            <div class="px-6 py-4 bg-gradient-to-r from-indigo-500 to-purple-600">
+            <div class="px-6 py-4 bg-gray-700">
                 <h3 class="text-lg font-medium text-white flex items-center">
                     <i class="fas fa-user mr-2"></i> User Details
                 </h3>
@@ -108,7 +108,7 @@
                         Cancel
                     </a>
                     <button type="submit" 
-                        class="px-6 py-3 bg-gradient-to-r from-indigo-500 to-purple-600 text-white rounded-lg shadow hover:from-indigo-600 hover:to-purple-700 transition-all duration-200">
+                        class="px-6 py-3 bg-gray-700 text-white rounded-lg shadow hover:from-indigo-600 hover:to-purple-700 transition-all duration-200">
                         <i class="fas fa-user-plus mr-2"></i> Create User
                     </button>
                 </div>

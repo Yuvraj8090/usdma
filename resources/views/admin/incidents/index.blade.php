@@ -1,78 +1,82 @@
 <x-app-layout>
     <x-slot name="header">
         <div class="flex items-center gap-3">
-            <i class="fas fa-exclamation-triangle text-yellow-500 text-xl"></i>
-            <h2 class="font-semibold text-xl text-gray-800 dark:text-gray-200">
-               Add Incidents
+            <i class="fas fa-exclamation-triangle text-gray-700 text-xl"></i>
+            <h2 class="text-xl font-semibold text-gray-800 dark:text-gray-200">
+                Incidents Management
             </h2>
         </div>
     </x-slot>
 
-    <div class="min-h-screen p-6 bg-gray-100 dark:bg-gray-900">
-        <div class="w-full">
-            <div class="bg-white dark:bg-gray-800 shadow-lg rounded-lg overflow-hidden">
+    <div class="p-6  min-h-screen">
+        <div class="max-w-7xl mx-auto space-y-6">
 
-                <!-- Page Header -->
-                <div class="px-6 py-4 border-b border-gray-200 dark:border-gray-700 flex justify-between items-center">
-                    <h2 class="text-2xl font-bold text-gray-800 dark:text-white flex items-center gap-2">
-                        <i class="fas fa-exclamation-triangle text-yellow-500"></i>
-                        Incidents
-                    </h2>
+            {{-- Header --}}
+            <div class="flex justify-between items-center">
+                <p class="text-sm text-gray-500 dark:text-gray-400">
+                    <i class="fas fa-exclamation-triangle mr-1"></i> Manage all incident records
+                </p>
 
-                    <a href="{{ route('admin.incidents.create') }}"
-                        class="px-4 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 flex items-center gap-2 transition">
-                        <i class="fas fa-plus"></i> Add Incident
-                    </a>
+                <a href="{{ route('admin.incidents.create') }}"
+                   class="inline-flex items-center px-4 py-2 rounded-lg bg-gray-700 text-white font-semibold shadow hover:shadow-lg transition">
+                    <i class="fas fa-plus mr-2"></i> New Incident
+                </a>
+            </div>
+
+            {{-- Flash Messages --}}
+            @if(session('success'))
+                <div class="flex items-center gap-2 p-4 rounded-lg bg-green-100 dark:bg-green-800 text-green-700 dark:text-green-100">
+                    <i class="fas fa-check-circle"></i>
+                    {{ session('success') }}
+                </div>
+            @endif
+
+            @if($errors->any())
+                <div class="flex items-center gap-2 p-4 rounded-lg bg-red-100 dark:bg-red-800 text-red-700 dark:text-red-100">
+                    <i class="fas fa-exclamation-circle"></i>
+                    {{ $errors->first() }}
+                </div>
+            @endif
+
+            {{-- Table --}}
+            <div class="bg-white dark:bg-gray-800 rounded-xl shadow border border-gray-200 dark:border-gray-700">
+                <div class="px-6 py-4 bg-gray-700 rounded-t-xl">
+                    <h3 class="text-white font-semibold flex items-center gap-2">
+                        <i class="fas fa-table"></i> Incidents List
+                    </h3>
                 </div>
 
-                <!-- Flash Messages -->
-                @if (session('success'))
-                    <div class="m-6 p-4 bg-green-500 text-white rounded flex items-center gap-2">
-                        <i class="fas fa-check-circle"></i> {{ session('success') }}
-                    </div>
-                @endif
-
-                @if ($errors->any())
-                    <div class="m-6 p-4 bg-red-500 text-white rounded flex items-center gap-2">
-                        <i class="fas fa-exclamation-circle"></i> {{ $errors->first() }}
-                    </div>
-                @endif
-
-                <!-- Incidents Table -->
                 <div class="p-6 overflow-x-auto">
-                    <table id="incidents-table"
-                        class="min-w-full divide-y divide-gray-200 dark:divide-gray-700 table-auto border border-gray-300 dark:border-gray-600">
-                        <thead class="bg-gray-50 dark:bg-gray-700">
-                            <tr class="text-gray-700 dark:text-gray-200 text-left text-sm font-semibold uppercase tracking-wider">
-                                <th class="px-4 py-2 border-b border-gray-200 dark:border-gray-600">Type</th>
-                                <th class="px-4 py-2 border-b border-gray-200 dark:border-gray-600">Incident Name</th>
-                                <th class="px-4 py-2 border-b border-gray-200 dark:border-gray-600">Date</th>
-                                <th class="px-4 py-2 border-b border-gray-200 dark:border-gray-600">State</th>
-                                <th class="px-4 py-2 border-b border-gray-200 dark:border-gray-600">Big Animals Died</th>
-                                <th class="px-4 py-2 border-b border-gray-200 dark:border-gray-600">Small Animals Died</th>
-                                <th class="px-4 py-2 border-b border-gray-200 dark:border-gray-600">Partially House</th>
-                                <th class="px-4 py-2 border-b border-gray-200 dark:border-gray-600">Severely House</th>
-                                <th class="px-4 py-2 border-b border-gray-200 dark:border-gray-600">Fully House</th>
-                                <th class="px-4 py-2 border-b border-gray-200 dark:border-gray-600">Cowshed Damaged</th>
-                                <th class="px-4 py-2 border-b border-gray-200 dark:border-gray-600">Human Died</th>
-                                <th class="px-4 py-2 border-b border-gray-200 dark:border-gray-600">Human Missing</th>
-                                <th class="px-4 py-2 border-b border-gray-200 dark:border-gray-600">Human Injured</th>
-                                <th class="px-4 py-2 border-b border-gray-200 dark:border-gray-600 text-center">Actions</th>
+                    <table id="incidents-table" class="w-full text-sm">
+                        <thead class="bg-gray-50 dark:bg-gray-700 text-gray-700 dark:text-gray-200 uppercase text-xs">
+                            <tr>
+                                <th class="px-4 py-3">Type</th>
+                                <th class="px-4 py-3">Incident</th>
+                                <th class="px-4 py-3">Date</th>
+                                <th class="px-4 py-3">State</th>
+                                <th class="px-4 py-3">Big Animals</th>
+                                <th class="px-4 py-3">Small Animals</th>
+                                <th class="px-4 py-3">Partial House</th>
+                                <th class="px-4 py-3">Severe House</th>
+                                <th class="px-4 py-3">Full House</th>
+                                <th class="px-4 py-3">Cowshed</th>
+                                <th class="px-4 py-3">Deaths</th>
+                                <th class="px-4 py-3">Missing</th>
+                                <th class="px-4 py-3">Injured</th>
+                                <th class="px-4 py-3 text-right">Actions</th>
                             </tr>
                         </thead>
-                        <tbody class="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700 text-sm">
-                            <!-- DataTables will populate rows here -->
-                        </tbody>
+                        <tbody></tbody>
                     </table>
                 </div>
-
             </div>
+
         </div>
     </div>
 
-    <!-- DataTables JS -->
+    {{-- DataTables --}}
     <script>
-        $(function() {
+        $(function () {
             $('#incidents-table').DataTable({
                 processing: true,
                 serverSide: true,
@@ -92,18 +96,18 @@
                     { data: 'died', name: 'died', orderable: false, searchable: false },
                     { data: 'missing', name: 'missing', orderable: false, searchable: false },
                     { data: 'injured', name: 'injured', orderable: false, searchable: false },
-                    { data: 'actions', name: 'actions', orderable: false, searchable: false, className: 'text-center' },
+                    { data: 'actions', orderable: false, searchable: false, className: 'text-right' },
                 ],
                 order: [[2, 'desc']],
                 pageLength: 10,
                 lengthMenu: [10, 25, 50, 100],
                 language: {
-                    search: "<span class='text-gray-700 dark:text-gray-200'>Search:</span>",
+                    search: "Search:",
                     lengthMenu: "Show _MENU_ entries",
-                    paginate: { previous: "<", next: ">" }
+                    paginate: { previous: "←", next: "→" }
                 },
-                createdRow: function(row) {
-                    $(row).addClass('hover:bg-gray-100 dark:hover:bg-gray-700 transition');
+                createdRow: function (row) {
+                    $(row).addClass('hover:bg-gray-50 dark:hover:bg-gray-700 transition');
                 }
             });
         });

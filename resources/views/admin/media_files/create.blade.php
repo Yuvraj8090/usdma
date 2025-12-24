@@ -37,7 +37,7 @@
                             Cancel
                         </a>
                         <button type="submit" 
-                                class="px-4 py-2 bg-gradient-to-r from-indigo-500 to-purple-500 hover:from-indigo-600 hover:to-purple-600 text-white rounded-lg font-semibold shadow transition-all duration-200">
+                                class="px-4 py-2 bg-gray-700 hover:from-indigo-600 hover:to-purple-600 text-white rounded-lg font-semibold shadow transition-all duration-200">
                             <i class="fas fa-upload mr-2"></i> Upload
                         </button>
                     </div>

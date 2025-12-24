@@ -63,7 +63,7 @@
                         <i class="fas fa-arrow-left mr-1"></i> Back
                     </a>
                     <button type="submit"
-                            class="px-4 py-2 bg-gradient-to-r from-indigo-500 to-purple-500 text-white rounded shadow hover:from-indigo-600 hover:to-purple-600">
+                            class="px-4 py-2 bg-gray-700 text-white rounded shadow hover:from-indigo-600 hover:to-purple-600">
                         <i class="fas fa-save mr-1"></i> Save Entry
                     </button>
                 </div>

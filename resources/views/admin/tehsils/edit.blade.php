@@ -35,7 +35,7 @@
                 <div class="flex items-center space-x-3">
                     <input type="checkbox" name="is_active" value="1" 
                            {{ old('is_active',$tehsil->is_active) ? 'checked':'' }}
-                           class="h-4 w-4 text-indigo-600 border-gray-300 rounded">
+                           class="h-4 w-4 text-gray-700 border-gray-300 rounded">
                     <label class="text-sm text-gray-700 dark:text-gray-300">Active</label>
                 </div>
 

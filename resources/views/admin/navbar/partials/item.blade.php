@@ -1,7 +1,7 @@
 <li class="py-3 px-4 mb-2 rounded-lg bg-white dark:bg-gray-800 shadow-sm border border-gray-200 dark:border-gray-700" data-id="{{ $item->id }}">
     <div class="flex items-center justify-between">
         <div class="flex items-center">
-            <div class="mr-4 text-indigo-400 dark:text-indigo-500 cursor-move hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors">
+            <div class="mr-4 text-indigo-400 dark:text-indigo-500 cursor-move hover:text-gray-700 dark:hover:text-indigo-400 transition-colors">
                 <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
                     <path fill-rule="evenodd" d="M10 3a1 1 0 01.707.293l3 3a1 1 0 01-1.414 1.414L10 5.414 7.707 7.707a1 1 0 01-1.414-1.414l3-3A1 1 0 0110 3zm-3.707 9.293a1 1 0 011.414 0L10 14.586l2.293-2.293a1 1 0 011.414 1.414l-3 3a1 1 0 01-1.414 0l-3-3a1 1 0 010-1.414z" clip-rule="evenodd" />
                 </svg>
@@ -34,7 +34,7 @@
         </div>
         <div class="flex items-center space-x-3">
             <a href="{{ route('admin.navbar-items.edit', $item) }}" 
-               class="p-2 text-indigo-600 bg-indigo-50 hover:bg-indigo-100 dark:text-indigo-400 dark:bg-indigo-900/50 dark:hover:bg-indigo-800 rounded-lg transition-colors"
+               class="p-2 text-gray-700 bg-indigo-50 hover:bg-indigo-100 dark:text-indigo-400 dark:bg-indigo-900/50 dark:hover:bg-indigo-800 rounded-lg transition-colors"
                title="Edit">
                 <i class="fas fa-pencil-alt"></i>
             </a>

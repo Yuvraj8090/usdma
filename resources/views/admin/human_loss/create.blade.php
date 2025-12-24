@@ -41,7 +41,7 @@
         {{-- CREATE FORM CARD --}}
         <div class="bg-white dark:bg-gray-800 rounded-xl shadow border border-gray-200 dark:border-gray-700">
 
-            <div class="px-6 py-4 bg-gradient-to-r from-indigo-500 to-purple-600 rounded-t-xl">
+            <div class="px-6 py-4 bg-gray-700 rounded-t-xl">
                 <h3 class="text-lg font-medium text-white flex items-center">
                     <i class="fas fa-user-injured mr-2"></i> Human Loss Details
                 </h3>

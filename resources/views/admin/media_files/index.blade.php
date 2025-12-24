@@ -13,7 +13,7 @@
                 <i class="fas fa-file-alt mr-1"></i> Manage your media files
             </div>
             <a href="{{ route('admin.media-files.create') }}"
-                class="inline-flex items-center px-4 py-2 bg-gradient-to-r from-indigo-500 to-purple-500 border border-transparent rounded-lg font-semibold text-white uppercase tracking-widest hover:from-indigo-600 hover:to-purple-600 transition-all duration-200 shadow-lg hover:shadow-xl">
+                class="inline-flex items-center px-4 py-2 bg-gray-700 border border-transparent rounded-lg font-semibold text-white uppercase tracking-widest hover:from-indigo-600 hover:to-purple-600 transition-all duration-200 shadow-lg hover:shadow-xl">
                 <i class="fas fa-plus-circle mr-2"></i> Upload New File
             </a>
         </div>
@@ -66,7 +66,7 @@
                         <!-- Actions -->
                         <div class="mt-4 flex justify-between space-x-1">
                             <a href="{{ route('admin.media-files.download', $file->id) }}"
-                                class="flex-1 inline-flex justify-center items-center px-3 py-1 bg-indigo-500 hover:bg-indigo-600 text-white text-xs font-medium rounded-lg transition-all duration-200">
+                                class="flex-1 inline-flex justify-center items-center px-3 py-1 bg-indigo-500 hover:bg-gray-700 text-white text-xs font-medium rounded-lg transition-all duration-200">
                                 <i class="fas fa-download mr-1"></i> Download
                             </a>
 

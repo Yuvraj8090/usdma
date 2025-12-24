@@ -12875,9 +12875,9 @@ namespace App\Models {
      * @property string $name
      * @property int $id
      * @property-read mixed $profile_photo_url
+     * @property-read \App\Models\Role $role
      * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\District> $districts
      * @property-read int|null $districts_count
-     * @property-read \App\Models\Role $role
      * @property-read \Illuminate\Database\Eloquent\Collection<int, \Laravel\Sanctum\PersonalAccessToken> $tokens
      * @property-read int|null $tokens_count
      * @property-read \Illuminate\Database\Eloquent\Collection<int, \Illuminate\Notifications\DatabaseNotification> $notifications

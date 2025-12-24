@@ -45,7 +45,7 @@
                     <a href="{{ route('admin.district-users.index') }}"
                         class="px-4 py-2 bg-gray-500 text-white rounded-lg hover:bg-gray-600">Cancel</a>
                     <button type="submit"
-                        class="px-4 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700">Update</button>
+                        class="px-4 py-2 bg-gray-700 text-white rounded-lg hover:bg-indigo-700">Update</button>
                 </div>
             </form>
         </div>

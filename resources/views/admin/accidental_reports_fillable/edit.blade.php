@@ -58,7 +58,7 @@
                         Cancel
                     </a>
                     <button type="submit"
-                            class="px-4 py-2 bg-gradient-to-r from-indigo-500 to-purple-500 text-white rounded-lg shadow hover:from-indigo-600 hover:to-purple-600">
+                            class="px-4 py-2 bg-gray-700 text-white rounded-lg shadow hover:from-indigo-600 hover:to-purple-600">
                         Update
                     </button>
                 </div>

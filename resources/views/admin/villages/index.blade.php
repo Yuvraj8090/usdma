@@ -13,13 +13,13 @@
             </div>
 
             <a href="{{ route('admin.villages.create') }}"
-                class="inline-flex items-center px-4 py-2 bg-gradient-to-r from-indigo-500 to-purple-500 rounded-lg font-semibold text-white uppercase shadow-lg hover:from-indigo-600 hover:to-purple-600 transition-all">
+                class="inline-flex items-center px-4 py-2 bg-gray-700 rounded-lg font-semibold text-white uppercase shadow-lg hover:from-indigo-600 hover:to-purple-600 transition-all">
                 <i class="fas fa-plus-circle mr-2"></i> Create Village
             </a>
 
             <div x-data="{ open: false }">
                 <button @click="open = !open"
-                    class="inline-flex items-center px-4 py-2 bg-gradient-to-r from-indigo-500 to-purple-500 rounded-lg font-semibold text-white uppercase shadow-lg hover:from-indigo-600 hover:to-purple-600 transition-all">
+                    class="inline-flex items-center px-4 py-2 bg-gray-700 rounded-lg font-semibold text-white uppercase shadow-lg hover:from-indigo-600 hover:to-purple-600 transition-all">
                     <i class="fas fa-filter mr-2"></i> Filters
                     <i :class="open ? 'fas fa-chevron-up ml-2' : 'fas fa-chevron-down ml-2'"></i>
                 </button>
@@ -56,7 +56,7 @@
                             @endforeach
                         </select>
 
-                        <button class="px-4 py-2 bg-gradient-to-r from-indigo-500 to-purple-500 rounded-lg text-white">
+                        <button class="px-4 py-2 bg-gray-700 rounded-lg text-white">
                             Apply
                         </button>
 
@@ -72,7 +72,7 @@
         @endif
 
         <div class="bg-white dark:bg-gray-800 rounded-xl shadow-lg border dark:border-gray-700 overflow-hidden">
-            <div class="px-6 py-4 bg-gradient-to-r from-indigo-500 to-purple-600">
+            <div class="px-6 py-4 bg-gray-700">
                 <h3 class="text-lg font-medium text-white"><i class="fas fa-location-dot mr-2"></i> All Villages</h3>
             </div>
 

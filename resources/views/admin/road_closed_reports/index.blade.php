@@ -13,7 +13,7 @@
                 <i class="fas fa-road mr-1"></i> Manage road closed data (grouped by district)
             </div>
             <a href="{{ route('admin.road-closed-reports.create') }}"
-                class="inline-flex items-center px-4 py-2 bg-gradient-to-r from-green-500 to-emerald-500 rounded-lg font-semibold text-white hover:from-green-600 hover:to-emerald-600 shadow-lg">
+                class="inline-flex items-center px-4 py-2 bg-gray-700 rounded-lg font-semibold text-white hover:from-green-600 hover:to-emerald-600 shadow-lg">
                 <i class="fas fa-plus-circle mr-2"></i> Add Report
             </a>
         </div>

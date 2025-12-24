@@ -4,67 +4,74 @@ namespace App\Http\Controllers;
 
 use App\Models\Role;
 use Illuminate\Http\Request;
+use Yajra\DataTables\Facades\DataTables;
 
 class RoleController extends Controller
 {
-    // Display all roles
-    public function index()
-{
-    // Fetch 10 roles per page
-    $roles = Role::orderBy('created_at', 'desc')->paginate(10);
-    
-    return view('roles.index', compact('roles'));
-}
+    public function index(Request $request)
+    {
+        if ($request->ajax()) {
 
+            $roles = Role::query();
 
-    // Show form to create a role
+            return DataTables::eloquent($roles)
+                ->editColumn('created_at', function (Role $role) {
+                    return $role->created_at->format('d M Y');
+                })
+                ->addColumn('actions', function (Role $role) {
+                    return view('admin.roles.partials.actions', compact('role'))->render();
+                })
+                ->rawColumns(['actions'])
+                ->make(true);
+        }
+
+        return view('admin.roles.index');
+    }
+
     public function create()
     {
-        return view('roles.create');
+        return view('admin.roles.create');
     }
 
-    // Store new role
     public function store(Request $request)
     {
-        $request->validate([
-            'name' => 'required|string|max:255|unique:roles,name',
+        $validated = $request->validate([
+            'name'        => 'required|string|max:255|unique:roles,name',
             'description' => 'nullable|string',
         ]);
 
-        Role::create($request->all());
+        Role::create($validated);
 
-        return redirect()->route('admin.roles.index')->with('success', 'Role created successfully.');
+        return redirect()
+            ->route('admin.roles.index')
+            ->with('success', 'Role created successfully.');
     }
 
-    // Show single role
-    public function show(Role $role)
-    {
-        return view('roles.show', compact('role'));
-    }
-
-    // Show form to edit role
     public function edit(Role $role)
     {
-        return view('roles.edit', compact('role'));
+        return view('admin.roles.edit', compact('role'));
     }
 
-    // Update role
     public function update(Request $request, Role $role)
     {
-        $request->validate([
-            'name' => 'required|string|max:255|unique:roles,name,' . $role->id,
+        $validated = $request->validate([
+            'name'        => 'required|string|max:255|unique:roles,name,' . $role->id,
             'description' => 'nullable|string',
         ]);
 
-        $role->update($request->all());
+        $role->update($validated);
 
-        return redirect()->route('admin.roles.index')->with('success', 'Role updated successfully.');
+        return redirect()
+            ->route('admin.roles.index')
+            ->with('success', 'Role updated successfully.');
     }
 
-    // Delete role
     public function destroy(Role $role)
     {
         $role->delete();
-        return redirect()->route('admin.roles.index')->with('success', 'Role deleted successfully.');
+
+        return redirect()
+            ->route('admin.roles.index')
+            ->with('success', 'Role deleted successfully.');
     }
 }

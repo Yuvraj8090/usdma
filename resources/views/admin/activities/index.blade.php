@@ -1,5 +1,5 @@
 <x-app-layout>
-    <div class="min-h-screen p-6 bg-gray-100 dark:bg-gray-900">
+    <div class="min-h-screen p-6 ">
         <div class="w-full">
             <div class="bg-white dark:bg-gray-800 shadow-lg rounded-lg overflow-hidden">
 
@@ -11,7 +11,7 @@
                     </h2>
 
                     <button id="addActivityBtn"
-                        class="px-4 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 flex items-center gap-2 transition">
+                        class="px-4 py-2 bg-gray-700 text-white rounded-lg hover:bg-indigo-700 flex items-center gap-2 transition">
                         <i class="fas fa-plus"></i> Add Activity
                     </button>
                 </div>
@@ -48,7 +48,7 @@
                 </div>
                 <div class="flex justify-end space-x-3">
                     <button type="button" id="closeModal" class="px-4 py-2 bg-gray-500 text-white rounded hover:bg-gray-600">Cancel</button>
-                    <button type="submit" class="px-4 py-2 bg-indigo-600 text-white rounded hover:bg-indigo-700">
+                    <button type="submit" class="px-4 py-2 bg-gray-700 text-white rounded hover:bg-indigo-700">
                         <i class="fas fa-save mr-2"></i> Save
                     </button>
                 </div>

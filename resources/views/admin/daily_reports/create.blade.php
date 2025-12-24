@@ -72,7 +72,7 @@
             <!-- Submit Button -->
             <div class="mt-6 flex justify-end">
                 <button type="submit"
-                        class="px-6 py-2 bg-gradient-to-r from-indigo-500 to-purple-500 text-white font-semibold rounded-lg shadow-lg hover:from-indigo-600 hover:to-purple-600 transition-colors">
+                        class="px-6 py-2 bg-gray-700 text-white font-semibold rounded-lg shadow-lg hover:from-indigo-600 hover:to-purple-600 transition-colors">
                     Save Reports
                 </button>
             </div>
