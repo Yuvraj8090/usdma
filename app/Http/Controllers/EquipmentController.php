@@ -52,8 +52,8 @@ class EquipmentController extends Controller
     {
         $districts = District::orderBy('name')->get();
         $categories = EquipmentCategory::orderBy('name')->get();
-        $activities = Activity::orderBy('name')->get();
-        $resourceTypes = ResourceType::orderBy('name')->get();
+        $activities = Activity::orderBy('activity_name')->get();
+        $resourceTypes = ResourceType::orderBy('resource_type')->get();
 
         return view('admin.equipment.edit', compact('equipment', 'districts', 'categories', 'activities', 'resourceTypes'));
     }
