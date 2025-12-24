@@ -29,13 +29,14 @@
 
             {{-- 🏠 Dashboard --}}
             <x-sidebar.link route="dashboard" label="Analytics" icon="fas fa-home" :active="request()->routeIs('dashboard')" />
-<x-sidebar.link route="admin.incidents.index" label="Add Incidents" icon="fas fa-bolt"
-                        :active="request()->routeIs('admin.incidents.*')" />
+            <x-sidebar.link route="admin.incidents.index" label="Add Incidents" icon="fas fa-bolt" :active="request()->routeIs('admin.incidents.*')" />
             {{-- 👑 Admin Section --}}
-            <x-sidebar.link route="admin.dhams.index" label="Dhams" icon="fas fa-place-of-worship"
-                        :active="request()->routeIs('admin.dhams.*')" />
-            <x-sidebar.dropdown icon="fas fa-user-shield" label="Admin" :active="request()->routeIs('admin.users.*') || request()->routeIs('admin.roles.*') || request()->routeIs('admin.daily_reports_fillable.*') || request()->routeIs('admin.accidental-reports-fillable.*') ||
-                    request()->routeIs('admin.accidental_reports.*')">
+            <x-sidebar.link route="admin.dhams.index" label="Dhams" icon="fas fa-place-of-worship" :active="request()->routeIs('admin.dhams.*')" />
+            <x-sidebar.dropdown icon="fas fa-user-shield" label="Admin" :active="request()->routeIs('admin.users.*') ||
+                request()->routeIs('admin.roles.*') ||
+                request()->routeIs('admin.daily_reports_fillable.*') ||
+                request()->routeIs('admin.accidental-reports-fillable.*') ||
+                request()->routeIs('admin.accidental_reports.*')">
 
                 {{-- 👥 User Management --}}
                 <x-sidebar.dropdown icon="fas fa-users-cog" label="User Management" :active="request()->routeIs('admin.users.*') || request()->routeIs('admin.roles.*')">
@@ -87,11 +88,11 @@
                     <x-sidebar.link route="admin.states.index" label="States" icon="fas fa-flag" :active="request()->routeIs('admin.states.*')" />
                     <x-sidebar.link route="admin.districts.index" label="Districts" icon="fas fa-city"
                         :active="request()->routeIs('admin.districts.*')" />
-                    
+
                     <x-sidebar.link route="admin.tehsils.index" label="Tehsils" icon="fas fa-map" :active="request()->routeIs('admin.tehsils.*')" />
                     <x-sidebar.link route="admin.villages.index" label="Villages" icon="fas fa-home"
                         :active="request()->routeIs('admin.villages.*')" />
-                    
+
                     <x-sidebar.link route="admin.tourist-visitor-details.index" label="Tourist Visitors"
                         icon="fas fa-users" :active="request()->routeIs('admin.tourist-visitor-details.*')" />
                     <x-sidebar.link route="admin.seasons.index" label="Seasons" icon="fas fa-cloud-sun"
@@ -171,6 +172,12 @@
                     <i class="fas fa-broom mr-3"></i> Clear Cache
                 </button>
             </form>
+
+            <button type="button"
+                class="w-full flex items-center px-3 py-2 text-sm font-medium rounded-md transition-colors hover:bg-gray-100 dark:hover:bg-gray-700 text-gray-700 dark:text-gray-200 hover:text-gray-900 dark:hover:text-white">
+                <a href="/deploy"><i class="fas fa-broom mr-3"></i> Deploy</a>
+            </button>
+
 
         </nav>
 
