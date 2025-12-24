@@ -47,8 +47,8 @@
                                     <td class="px-6 py-4 text-sm font-medium text-gray-900 dark:text-gray-100">{{ $equipment->name }}</td>
                                     <td class="px-6 py-4 text-sm text-gray-600 dark:text-gray-400">{{ $equipment->category?->name ?? 'N/A' }}</td>
                                     <td class="px-6 py-4 text-sm text-gray-600 dark:text-gray-400">{{ $equipment->district?->name ?? 'N/A' }}</td>
-                                    <td class="px-6 py-4 text-sm text-gray-600 dark:text-gray-400">{{ $equipment->activity?->name ?? 'N/A' }}</td>
-                                    <td class="px-6 py-4 text-sm text-gray-600 dark:text-gray-400">{{ $equipment->resourceType?->name ?? 'N/A' }}</td>
+                                    <td class="px-6 py-4 text-sm text-gray-600 dark:text-gray-400">{{ $equipment->activity?->activity_name ?? 'N/A' }}</td>
+                                    <td class="px-6 py-4 text-sm text-gray-600 dark:text-gray-400">{{ $equipment->resourceType?->resource_type ?? 'N/A' }}</td>
                                     <td class="px-6 py-4">
                                         <span class="px-3 py-1 inline-flex text-xs font-semibold rounded-full
                                             {{ $equipment->quantity > 10 ? 'bg-green-100 text-green-800' : ($equipment->quantity > 0 ? 'bg-yellow-100 text-yellow-800' : 'bg-red-100 text-red-800') }}">
